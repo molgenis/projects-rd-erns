@@ -1,0 +1,66 @@
+
+
+# define package
+name: ernstats
+label: ERN Summary Statistics
+description: Descriptives on enrolled patients, sex, age, and more
+version: 1.0.0
+date: 2022-06-03
+
+
+defaults:
+  idAttribute: false
+  nillable: true
+  visible: true
+
+entities:
+  - name: hcps
+    label: Healthcare Providers
+    description: All participating hcps
+    attributes:
+      - name: name
+        dataType: string
+        idAttribute: true
+        labelAttribute: true
+        lookupAttribute: true
+        nillable: false
+        unique: true
+        readOnly: true
+        
+      - name: hasSubmittedData
+        dataType: bool
+      
+      - name: longitude
+        dataType: decimal
+        
+      - name: latitude
+        dataType: decimal
+      
+  - name: statistics
+    label: Summary Statistics
+    description: Stats used in the dashboard
+    attributes:
+      - name: id
+        auto: true
+        idAttribute: true
+        nillable: false
+        unique: true
+        readOnly: true
+        
+      - name: title
+        dataType: string
+    
+      - name: label
+        dataType: string
+        labelAttribute: true
+        lookupAttribute: true
+        
+      - name: value
+        dataType: decimal
+        
+      - name: dashboardElement
+        dataType: string
+        
+      - name: description
+        dataType: text
+      
