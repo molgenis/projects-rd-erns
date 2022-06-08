@@ -90,9 +90,7 @@ export default {
   },
   watch: {
     data () {
-      if (this.data) {
-        this.renderTable()
-      }
+      this.renderTable()
     }
   }
 }

@@ -77,18 +77,9 @@ export default {
         .style('stroke-width', '1px')
         .style('opacity', 0.7)
         
-      // svg.selectAll('pie-slices')
-      //   .data(pieChartData)
-      //   .join('text')
-      //   .text(d => `${d.data[0]}: ${d.data[1]}%`)
-      //   .attr('transform', d => `translate(${arcGenerator.centroid(d)})`)
-      //   .style('text-anchor', 'middle')
-      //   .style('font-size', 11)
-        
       // draw lines between slices and labels
       svg.selectAll('slice-label-lines')
         .data(pieChartData)
-        // .enter()
         .join('polyline')
         .attr('class', 'slice-label-lines')
         .attr('stroke', '#3f454b')
