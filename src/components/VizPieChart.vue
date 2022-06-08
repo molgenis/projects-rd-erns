@@ -1,12 +1,6 @@
 <template>
     <div class="d3-viz d3-pie-chart">
-      <svg
-        :id="chartId"
-        width="100%"
-        height="100%"
-        preserveAspectRatio="xMinYMin"
-        viewBox="0 0 250 250"
-      ></svg>
+      <svg :id="chartId" preserveAspectRatio="xMinYMin"></svg>
     </div>
 </template>
 
@@ -31,7 +25,7 @@ export default {
     },
     chartWidth: {
       type: Number,
-      default: 250
+      default: 350
     },
     chartMargins: {
       type: Number,
@@ -49,7 +43,11 @@ export default {
 
       // append the svg object to the div called 'my_dataviz'
       const svg = d3.select(`#${this.$el.childNodes[0].id}`)
+        .attr('width', this.chartWidth)
+        .attr('height', this.chartHeight)
+        .attr('viewbox', `0 0 ${this.chartWidth} ${this.chartHeight}`)
         .append('g')
+        .attr('class', 'pie-chart-content')
         .attr('transform', `translate(${this.chartWidth / 2}, ${this.chartHeight / 2})`)
 
       // set the color scale
@@ -57,32 +55,80 @@ export default {
         .range(this.chartColors)
 
       // Compute the position of each group on the pie:
-      const pie = d3.pie()
-        .value(d => d[1])
+      const pie = d3.pie().sort(null).value(d => d[1])
       const pieChartData = pie(Object.entries(this.chartData))
       
       const arcGenerator = d3.arc()
         .innerRadius(0)
-        .outerRadius(radius)
+        .outerRadius(radius * 0.7)
+        
+      const labelArcGenerator = d3.arc()
+        .innerRadius(radius * 0.8)
+        .outerRadius(radius * 0.8)
 
       // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-      svg
-        .selectAll('pie-slices')
+      svg.selectAll('slices')
         .data(pieChartData)
         .join('path')
         .attr('d', arcGenerator)
+        .attr('class', 'slices')
         .attr('fill', d => color(d.data[1]))
-        .attr('stroke', 'black')
-        .style('stroke-width', '2px')
+        .attr('stroke', '#3f454b')
+        .style('stroke-width', '1px')
         .style('opacity', 0.7)
         
-      svg.selectAll('pie-slices')
+      // svg.selectAll('pie-slices')
+      //   .data(pieChartData)
+      //   .join('text')
+      //   .text(d => `${d.data[0]}: ${d.data[1]}%`)
+      //   .attr('transform', d => `translate(${arcGenerator.centroid(d)})`)
+      //   .style('text-anchor', 'middle')
+      //   .style('font-size', 11)
+        
+      // draw lines between slices and labels
+      svg.selectAll('slice-label-lines')
+        .data(pieChartData)
+        // .enter()
+        .join('polyline')
+        .attr('class', 'slice-label-lines')
+        .attr('stroke', '#3f454b')
+        .attr('fill', 'none')
+        .attr('stroke-width', '1px')
+        .attr('points', d => {
+          // centroid of slices
+          const start = arcGenerator.centroid(d)
+
+          // centroid of the outer circle, i.e. where the line will break
+          const mid = labelArcGenerator.centroid(d)
+          
+          // label position (largely the same as mid)
+          const end = labelArcGenerator.centroid(d)
+          
+          // calculate if angle is left of to the right
+          const angle = d.startAngle + (d.endAngle - d.startAngle) / 2
+          
+          // set position to the left or right
+          end[0] = radius * 0.95 * (angle < Math.PI ? 1 : -1)
+          return [start, mid, end]
+        })
+        
+      // add labels
+      svg.selectAll('slice-labels')
         .data(pieChartData)
         .join('text')
-        .text(d => `${d.data[0]}: ${d.data[1]}%`)
-        .attr('transform', d => `translate(${arcGenerator.centroid(d)})`)
-        .style('text-anchor', 'middle')
-        .style('font-size', 11)
+        .text(d => `${d.data[0]}\n${d.data[1]}%`)
+        .attr('class', 'slice-labels')
+        .attr('transform', d => {
+          const position = labelArcGenerator.centroid(d)
+          const angle = d.startAngle + (d.endAngle - d.startAngle) / 2
+          position[0] = radius * 0.99 * (angle < Math.PI ? 1 : -1)
+          return `translate(${position})`
+        })
+        .style('text-anchor', d => {
+          const angle = d.startAngle + (d.endAngle - d.startAngle) / 2
+          return angle < Math.PI ? 'start' : 'end'
+        })
+        .style('font-size', '11pt')
     }
   },
   watch: {
@@ -92,3 +138,13 @@ export default {
   }
 }
 </script>
+
+<styles lang="scss">
+.d3-pie-chart {
+  .pie-chart-content {
+    .slice-labels {
+      white-space: pre;
+    }
+  }
+}
+</styles>
