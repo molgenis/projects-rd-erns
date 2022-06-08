@@ -25,9 +25,9 @@
                 <div class="row">
                   <DataTable
                     tableId="hcp-enrollment"
-                    :data="hcpEnrollment.data"
+                    :data="healthcareProvidersEnrollment.data"
                     :columnOrder='["label", "value"]'
-                    :caption="hcpEnrollment.title"
+                    :caption="healthcareProvidersEnrollment.title"
                     :visuallyHideHeader="true"
                   />
                 </div>
@@ -65,9 +65,9 @@
           </h2>
           <DataTable
             tableId="patients-registry"
-            :data="patientsRegistry.data"
+            :data="diseaseGroupEnrollment.data"
             :columnOrder='["Thematic Disease Groups", "Number of Patients"]'
-            :caption="patientsRegistry.title"
+            :caption="diseaseGroupEnrollment.title"
           />
         </section>
       </main>
@@ -83,8 +83,7 @@ import BarChart from './components/VizBarChart.vue'
 export default {
   data () {
     return {
-      // loading: true,
-      loading: false,
+      loading: true,
       countryEnrollment: {
         title: null,
         data: []
@@ -118,58 +117,50 @@ export default {
       const response = await fetch(url)
       return response.json()
     },
+    asDataObject (data, key, value) {
+      const newDataObject = {}
+      data.forEach(row => { newDataObject[row[key]] = row[value] })
+      return newDataObject
+    },
+    subsetData (data, value) {
+      return data.filter(row => row.dashboardElement === value)
+    },
     extractData (data) {
+      const datasetTitle = data[0].title
       return {
-        title: data.items[0].title,
-        data: data.items
+        title: datasetTitle,
+        data: data
       }
     },
-    renameKeys (data, labelMappings) {
-      data.forEach(row => {
-        labelMappings.forEach((labelMap) => {
-          row[labelMap.newKey] = row[labelMap.oldKey]
-          delete data[labelMap.oldKey]
-        })
-      })
-      return data
+    renameKey (data, oldKey, newKey) {
+      data.forEach(row => delete Object.assign(row, { [newKey]: row[oldKey] })[oldKey])
     }
   },
   mounted () {
     Promise.all([
-      this.fetchData('/api/v2/ernstats_statistics?q=dashboardElement==table_country_enrollment'),
-      this.fetchData('/api/v2/ernstats_statistics?q=dashboardElement==table_hcp_enrollment'),
-      this.fetchData('/api/v2/ernstats_statistics?q=dashboardElement==number_patients_genturis_registry'),
-      this.fetchData('/api/v2/ernstats_statistics?q=dashboardElement==pie_sex_at_birth'),
-      this.fetchData('/api/v2/ernstats_statistics?q=dashboardElement==barchart_age_at_inclusion')
+      this.fetchData('/api/v2/ernstats_statistics')
     ]).then(result => {
-      this.countryEnrollment = this.extractData(result[0])
-      this.hcpEnrollment = this.extractData(result[1])
+      const data = result[0].items
 
-      // prepare data for disease group counts
-      const newLabels = [
-        { oldKey: 'label', newKey: 'Thematic Disease Groups' },
-        { oldKey: 'value', newKey: 'Number of Patients' }
-      ]
-      const extractedPatientData = this.extractData(result[2])
-      extractedPatientData.data = this.renameKeys(
-        extractedPatientData.data, newLabels
-      )
-      this.patientsRegistry = extractedPatientData
+      const countryEnrollmentData = this.subsetData(data, 'table_country_enrollment')
+      const healthcareProvidersData = this.subsetData(data, 'table_hcp_enrollment')
+      const diseaseGroupEnrollmentData = this.subsetData(data, 'number_patients_genturis_registry')
+      const sexAtBirthData = this.subsetData(data, 'pie_sex_at_birth')
+      const ageAtInclusionData = this.subsetData(data, 'barchart_age_at_inclusion')
       
-      // process set at birth data
-      this.sexAtBirth.title = result[3].items[0].title
-      const pieChartData = {}
-      result[3].items.forEach(row => {
-        pieChartData[row.label] = row.value
-      })
-      this.sexAtBirth.data = pieChartData
-      
-      // process age at time of inclusion data
-      this.ageAtInclusion = this.extractData(result[4])
+      this.countryEnrollment = this.extractData(countryEnrollmentData)
+      this.healthcareProvidersEnrollment = this.extractData(healthcareProvidersData)
+
+      this.diseaseGroupEnrollment = this.extractData(diseaseGroupEnrollmentData)
+      this.renameKey(this.diseaseGroupEnrollment.data, 'label', 'Thematic Disease Groups')
+      this.renameKey(this.diseaseGroupEnrollment.data, 'value', 'Number of Patients')
+
+      this.sexAtBirth.title = sexAtBirthData[0].title
+      this.sexAtBirth.data = this.asDataObject(sexAtBirthData, 'label', 'value')
+
+      this.ageAtInclusion = this.extractData(ageAtInclusionData)
     }).then(() => {
-      setTimeout(() => {
-        this.loading = false
-      }, 450)
+      this.loading = false
     })
   }
 }

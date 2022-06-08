@@ -126,10 +126,8 @@ export default {
       }
     }
   },
-  watch: {
-    chartData () {
-      this.renderChart()
-    }
+  mounted () {
+    this.renderChart()
   }
 }
 </script>

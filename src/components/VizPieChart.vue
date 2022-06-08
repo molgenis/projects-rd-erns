@@ -122,10 +122,8 @@ export default {
         .style('font-size', '11pt')
     }
   },
-  watch: {
-    chartData () {
-      this.renderChart()
-    }
+  mounted () {
+    this.renderChart()
   }
 }
 </script>

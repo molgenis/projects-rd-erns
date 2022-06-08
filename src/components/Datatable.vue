@@ -88,10 +88,8 @@ export default {
       })
     }
   },
-  watch: {
-    data () {
-      this.renderTable()
-    }
+  mounted () {
+    this.renderTable()
   }
 }
 </script>
