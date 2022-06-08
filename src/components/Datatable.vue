@@ -28,6 +28,11 @@ export default {
       type: String,
       required: false,
       default: null
+    },
+    visuallyHideHeader: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   methods: {
@@ -38,6 +43,7 @@ export default {
       
       // create <thead> element
       const tableHeader = table.append('thead')
+        .attr('class', () => this.visuallyHideHeader ? 'visually-hidden-header' : '')
       tableHeader.append('tr')
         .selectAll('th')
         .data(this.columnOrder)
@@ -104,6 +110,8 @@ $text-default: #3f454b;
 
   .datatable {
     border-spacing: 0;
+    width: 100%;
+    position: relative;
     
     .datatable-caption {
       caption-side: top;
@@ -123,6 +131,17 @@ $text-default: #3f454b;
           border-bottom: 1px solid $text-dark;
           color: $text-dark;
         }
+      }
+      
+      &.visually-hidden-header {
+         position: absolute;
+        clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+        clip: rect(1px, 1px, 1px, 1px);
+        overflow: hidden;
+        height: 1px;
+        width: 1px;
+        margin: -1px;
+        white-space: nowrap;
       }
     }
     
