@@ -130,6 +130,9 @@ export default {
 
 <styles lang="scss">
 .d3-pie-chart {
+  svg {
+    margin: 0 auto;
+  }
   .pie-chart-content {
     .slice-labels {
       white-space: pre;
