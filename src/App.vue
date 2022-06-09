@@ -1,90 +1,109 @@
 <template>
-    <div id="dashboard">
+    <div id="dashboard-container">
       <LoadingScreen v-if="loading" />
-      <main class="container-fluid" v-else>
-        <div class="row">
-          <section class="col-sm-5">
-            <h2 class="visually-hidden">Map of Institutions</h2>
-            <GeoMercator chartId="ern-institutions"/>
-          </section>
-          <div class="col-sm-7">
-            <div class="row">
-              <section id="patient-enrollment-summary" class="col-sm-5" aria-labelledBy="patient-enrollment-summary-title">
-                <h2 id="patient-enrollment-summary-title" class="visually-hidden">
-                  Summaries on Patient Enrollment
-                </h2>
-                <div class="row">
-                  <DataTable
-                    tableId="country-enrollment"
-                    :data="countryEnrollment.data"
-                    :columnOrder='["label","value"]'
-                    :caption="countryEnrollment.title"
-                    :visuallyHideHeader="true"
-                  />
-                </div>
-                <div class="row">
-                  <DataTable
-                    tableId="hcp-enrollment"
-                    :data="healthcareProvidersEnrollment.data"
-                    :columnOrder='["label", "value"]'
-                    :caption="healthcareProvidersEnrollment.title"
-                    :visuallyHideHeader="true"
-                  />
-                </div>
-              </section>
-              <section id="sex-at-birth" aria-labelledBy="sex-at-birth-title" class="col-sm-7">
-                <h2 id="sex-at-birth-title" class="chart-title">
-                  {{ sexAtBirth.title }}
-                </h2>
-                <PieChart
-                  chartId="sex-at-birth-chart"
-                  :chartData="sexAtBirth.data"
-                />
-              </section>
-            </div>
-            <div class="row">
-              <section id="age-at-inclusion" aria-labelledBy="age-at-inclusion-title" class="col-sm-12">
-                <h2 id="age-at-inclusion-title" class="chart-title">
-                  {{ ageAtInclusion.title }}
-                </h2>
-                <BarChart
-                  chartId="age-at-inclusion-chart"
-                  :chartData="ageAtInclusion.data"
-                  xvar="label"
-                  yvar="value"
-                  xAxisLabel="Age Groups"
-                  yAxisLabel="Number of Patients"
-                />
-              </section>
-            </div>
-          </div>
-        </div>
-        <section id="patient-enrollment-summary" aria-labelledBy="patient-enrollment-summary-title" class="row">
+      <DashboardUI id="ern-dashboard" :loading="loading" v-else>
+        <DashboardSection
+          id="viz-map"
+          aria-labelledBy="viz-map-title"
+        >
+          <h2 id="viz-map-title" class="chart-title">
+            Status of data submitted by Healthcare Providers
+          </h2>
+            <GeoMercator
+              chartId="ern-institutions"
+              :chartData="institutionGeoData"
+              :chartWidth="400"
+              :chartHeight="700"
+              :chartCenterCoordinates="[6, 54]"
+            />
+            <ChartLegend
+              :labels="['Data Submitted', 'No Data']"
+              :colors="['#3b3b3b', '#94a6da']"
+            />
+        </DashboardSection>
+        <DashboardSection id="viz-table-patient-enrollment">
+          <h2 id="patient-enrollment-summary-title" class="visually-hidden">
+            Summaries on Patient Enrollment
+          </h2>
+          <DataTable
+            tableId="country-enrollment"
+            class="ern-table-summary"
+            :data="countryEnrollment.data"
+            :columnOrder='["label","value"]'
+            :caption="countryEnrollment.title"
+            :visuallyHideHeader="true"
+          />
+        </DashboardSection>
+        <DashboardSection id="viz-table-hcp-enrollment">
+          <DataTable
+            tableId="hcp-enrollment"
+            class="ern-table-summary"
+            :data="healthcareProvidersEnrollment.data"
+            :columnOrder='["label", "value"]'
+            :caption="healthcareProvidersEnrollment.title"
+            :visuallyHideHeader="true"
+          />
+        </DashboardSection>
+        <DashboardSection id="viz-pie-chart">
+          <h2 id="sex-at-birth-title" class="chart-title">
+            {{ sexAtBirth.title }}
+          </h2>
+          <PieChart
+            chartId="sex-at-birth-chart"
+            :chartData="sexAtBirth.data"
+            class="m-auto"
+            :chartColors="['#d7e0f1', '#355cb8', '#7e98d4']"
+          />
+        </DashboardSection>
+        <DashboardSection id="viz-age-bar-chart">
+          <h2 id="age-at-inclusion-title" class="chart-title">
+            {{ ageAtInclusion.title }}
+          </h2>
+          <BarChart
+            chartId="age-at-inclusion-chart"
+            :chartData="ageAtInclusion.data"
+            :chartHeight="350"
+            :chartWidth="600"
+            barFill="#355cb8"
+            xvar="label"
+            yvar="value"
+            xAxisLabel="Age Groups"
+            yAxisLabel="Number of Patients"
+          />
+        </DashboardSection>
+        <DashboardSection id="viz-table-disease-enrollment">
           <h2 id="patient-enrollment-summary-title" class="visually-hidden">
             Summary of patients enrolled by thematic disease group
           </h2>
           <DataTable
-            tableId="patients-registry"
+            tableId="disease-group-enrollment-table"
+            class="ern-table-dataset"
             :data="diseaseGroupEnrollment.data"
             :columnOrder='["Thematic Disease Groups", "Number of Patients"]'
             :caption="diseaseGroupEnrollment.title"
           />
-        </section>
-      </main>
+        </DashboardSection>
+      </DashboardUI>
     </div>
 </template>
 
 <script>
+import DashboardUI from './components/Dashboard.vue'
+import DashboardSection from './components/DashboardSection.vue'
 import LoadingScreen from './components/LoadingScreen.vue'
 import DataTable from './components/Datatable.vue'
 import PieChart from './components/VizPieChart.vue'
 import BarChart from './components/VizBarChart.vue'
 import GeoMercator from './components/VizGeoMercator.vue'
+import ChartLegend from './components/VizLegend.vue'
+
+import './styles/styles.scss'
 
 export default {
   data () {
     return {
       loading: true,
+      institutionGeoData: [],
       countryEnrollment: {
         title: null,
         data: []
@@ -108,11 +127,14 @@ export default {
     }
   },
   components: {
+    DashboardUI,
+    DashboardSection,
     LoadingScreen,
     DataTable,
     PieChart,
     BarChart,
-    GeoMercator
+    GeoMercator,
+    ChartLegend
   },
   methods: {
     async fetchData (url) {
@@ -140,9 +162,12 @@ export default {
   },
   mounted () {
     Promise.all([
-      this.fetchData('/api/v2/ernstats_statistics')
+      this.fetchData('/api/v2/ernstats_statistics'),
+      this.fetchData('/api/v2/ernstats_hcps')
     ]).then(response => {
       const data = response[0].items
+      const mapData = response[1].items
+      this.institutionGeoData = mapData
 
       const countryEnrollmentData = this.subsetData(data, 'table_country_enrollment')
       const healthcareProvidersData = this.subsetData(data, 'table_hcp_enrollment')
@@ -167,35 +192,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-
-.visually-hidden {
-  position: absolute;
-  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
-  clip: rect(1px, 1px, 1px, 1px);
-  overflow: hidden;
-  height: 1px;
-  width: 1px;
-  margin: -1px;
-  white-space: nowrap;
-}
-
-.row, .col-sm-6 {
-  border: 1px solid #bdbdbd;
-}
-
-.chart-title {
-  font-size: 14pt;
-  font-weight: bold;
-  line-height: 1.4;
-  letter-spacing: 0.03em;
-  text-align: center;
-  padding: 1em 0;
-}
-
-#dashboard {
-  background-color: #f6f6f6;
-}
-
-</style>

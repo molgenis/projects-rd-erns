@@ -1,0 +1,101 @@
+.visually-hidden {
+  position: absolute;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  white-space: nowrap;
+}
+
+.chart-title {
+  font-size: 14pt;
+  font-weight: bold;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+  padding: 1em 0;
+  text-align: center;
+  color: #252525;
+}
+
+.ern-table-summary {
+  table {
+    caption {
+      box-sizing: border-box;
+      padding: 6px 12px;
+      color: #355cb8;
+      background-color: hsl(222, 55%, 94%);
+      font-size: 11pt;
+      border-radius: 2px;
+      margin: 0;
+    }
+    tbody {
+      background-color: #f6f6f6;
+    }
+  }
+}
+
+.ern-table-dataset {
+  table {
+    tbody {
+      tr:last-child {
+        td {
+          border-top: 1px solid #252525;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+#ern-dashboard {
+  background-color: #f6f6f6;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "map tablePatient piechart"
+    "map tableHcp piechart"
+    "map barchart barchart"
+    "table table table";
+
+  $gap: 16px;
+  column-gap: $gap;
+  row-gap: $gap;
+}
+
+#viz-map {
+  grid-area: map;
+}
+#viz-table-patient-enrollment {
+  grid-area: tablePatient;
+}
+
+#viz-table-hcp-enrollment {
+  grid-area: tableHcp;
+}
+
+#viz-pie-chart {
+  grid-area: piechart;
+}
+
+#viz-age-bar-chart {
+  grid-area: barchart;
+}
+
+#viz-table-disease-enrollment {
+  grid-area: table;
+}
+
+#disease-group-enrollment-table {
+  table {
+    thead {
+      tr {
+        th:last-child {
+          text-align: right;
+        }
+      }
+    }
+  }
+}
