@@ -5,7 +5,7 @@
         <div class="row">
           <section class="col-sm-5">
             <h2 class="visually-hidden">Map of Institutions</h2>
-            <p>[insert map here]</p>
+            <GeoMercator chartId="ern-institutions"/>
           </section>
           <div class="col-sm-7">
             <div class="row">
@@ -79,6 +79,7 @@ import LoadingScreen from './components/LoadingScreen.vue'
 import DataTable from './components/Datatable.vue'
 import PieChart from './components/VizPieChart.vue'
 import BarChart from './components/VizBarChart.vue'
+import GeoMercator from './components/VizGeoMercator.vue'
 
 export default {
   data () {
@@ -110,7 +111,8 @@ export default {
     LoadingScreen,
     DataTable,
     PieChart,
-    BarChart
+    BarChart,
+    GeoMercator
   },
   methods: {
     async fetchData (url) {
@@ -122,25 +124,25 @@ export default {
       data.forEach(row => { newDataObject[row[key]] = row[value] })
       return newDataObject
     },
-    subsetData (data, value) {
-      return data.filter(row => row.dashboardElement === value)
-    },
     extractData (data) {
-      const datasetTitle = data[0].title
+      const datasetName = data[0].title
       return {
-        title: datasetTitle,
+        title: datasetName,
         data: data
       }
     },
     renameKey (data, oldKey, newKey) {
       data.forEach(row => delete Object.assign(row, { [newKey]: row[oldKey] })[oldKey])
+    },
+    subsetData (data, value) {
+      return data.filter(row => row.dashboardElement === value)
     }
   },
   mounted () {
     Promise.all([
       this.fetchData('/api/v2/ernstats_statistics')
-    ]).then(result => {
-      const data = result[0].items
+    ]).then(response => {
+      const data = response[0].items
 
       const countryEnrollmentData = this.subsetData(data, 'table_country_enrollment')
       const healthcareProvidersData = this.subsetData(data, 'table_hcp_enrollment')
