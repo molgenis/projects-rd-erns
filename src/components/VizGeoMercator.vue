@@ -13,6 +13,10 @@ export default {
       type: String,
       required: true
     },
+    chartData: {
+      type: Array,
+      required: true
+    },
     chartWidth: {
       type: Number,
       default: 500
@@ -41,7 +45,6 @@ export default {
   },
   methods: {
     renderChart () {
-      console.log(this.chartWidth)
       const svg = d3.select(`#${this.$el.childNodes[0].id}`)
         .attr('width', '100%')
         .attr('height', this.chartHeight)
@@ -61,9 +64,21 @@ export default {
         .data(this.geojson.features)
         .enter()
         .append('path')
-        .attr('fill', '#c4c4c4')
+        .attr('fill', '#d6d6d6')
         .attr('d', path)
         .attr('stroke', '#f6f6f6')
+        
+      const dataLayer = svg.append('g')
+        .attr('class', 'data-layer')
+        
+      dataLayer.selectAll('circle')
+        .data(this.chartData)
+        .enter()
+        .append('circle')
+        .attr('cx', d => projection([d.longitude, d.latitude])[0])
+        .attr('cy', d => projection([d.longitude, d.latitude])[1])
+        .attr('r', '4')
+        .attr('fill', d => d.hasSubmittedData ? '#3b3b3b' : '#94a6da')
     }
   },
   mounted () {

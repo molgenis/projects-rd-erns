@@ -81,7 +81,8 @@ export default {
         .attr('transform', `translate(0, ${heightMarginAdjusted})`)
         .call(d3.axisBottom(xAxis))
         .selectAll('text')
-        .style('text-anchor', 'end')
+        .style('text-anchor', 'middle')
+        .style('font-size', '11pt')
         
       // properly calcuate ymax
       const ymax = d3.max(this.chartData, d => d[this.yvar])
@@ -90,7 +91,11 @@ export default {
         .range([heightMarginAdjusted, 0])
         .nice()
       
-      chartArea.append('g').call(d3.axisLeft(yAxis))
+      chartArea.append('g')
+        .call(d3.axisLeft(yAxis))
+        .selectAll('text')
+        .style('font-size', '11pt')
+
       chartArea.selectAll('vertical-bars')
         .data(this.chartData)
         .enter()
@@ -106,7 +111,7 @@ export default {
           .attr('x', (this.chartWidth / 2) + (this.chartMargins.left * -0.35))
           .attr('y', this.chartHeight - (this.chartMargins.bottom / 2))
           .attr('text-anchor', 'middle')
-          .style('font-size', '11pt')
+          .style('font-size', '12pt')
           .text(this.xlabel)
       }
       
@@ -121,7 +126,7 @@ export default {
           .attr('x', -(this.chartHeight / 2))
           .attr('y', this.chartMargins.left / 2)
           .attr('text-anchor', 'middle')
-          .style('font-size', '11pt')
+          .style('font-size', '12pt')
           .text(this.ylabel)
       }
     }

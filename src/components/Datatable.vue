@@ -1,7 +1,7 @@
 <template>
-  <div class="datatable-container">
-    <table :id="tableId" class="datatable">
-      <caption v-if="caption" class="datatable-caption">{{caption}}</caption>
+  <div class="d3-viz d3-table">
+    <table :id="tableId">
+      <caption v-if="caption">{{caption}}</caption>
     </table>
   </div>
 </template>
@@ -99,17 +99,17 @@ export default {
 $text-dark: #252525;
 $text-default: #3f454b;
 
-.datatable-container {
+.d3-table {
   width: 100%;
   text-align: left;
   color: $text-default;
 
-  .datatable {
+  table {
     border-spacing: 0;
     width: 100%;
     position: relative;
     
-    .datatable-caption {
+    caption {
       caption-side: top;
       font-size: 14pt;
       margin: 12px 0;
