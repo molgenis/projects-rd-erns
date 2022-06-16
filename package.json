@@ -1,0 +1,11 @@
+{
+  "name": "molgenis-app-ern-dashboard",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/molgenis/molgenis-app-ern-dashboard.git",
+  "author": "davidruvolo51 <davidruvolo51@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "emx:build-genturis": "python build-emx.py profiles/ern_genturis.yaml"
+  }
+}
