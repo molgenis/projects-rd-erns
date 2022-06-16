@@ -1,9 +1,17 @@
-
+#//////////////////////////////////////////////////////////////////////////////
+# FILE: ernstats.yaml
+# AUTHOR: David Ruvolo
+# CREATED: 2022-06-16
+# MODIFIED: 2022-06-16
+# PURPOSE: EMX markup for the ERN Stats package
+# STATUS: experimental
+# COMMENTS: render using build-emx.py
+#//////////////////////////////////////////////////////////////////////////////
 
 # define package
 name: ernstats
 label: ERN Summary Statistics
-description: Descriptives on enrolled patients, sex, age, and more
+description: Descriptives on enrolled patients and data providers
 version: 1.0.0
 date: 2022-06-03
 
@@ -14,11 +22,12 @@ defaults:
   visible: true
 
 entities:
-  - name: hcps
-    label: Healthcare Providers
-    description: All participating hcps
+  - name: dataproviders
+    label: Data Providers
+    description: All affiliated data providers (intitutions, hospitals, etc.)
     attributes:
       - name: name
+        description: An established society, corporation, foundation or other organization founded and united for a specific purpose, e.g. for health-related research; also used to refer to a building or buildings occupied or used by such organization.
         dataType: string
         idAttribute: true
         labelAttribute: true
@@ -26,17 +35,47 @@ entities:
         nillable: false
         unique: true
         readOnly: true
+        tags: NCIT_C41206 http://purl.obolibrary.org/obo/NCIT_C41206
+    
+      - name: city  
+        description: A large and densely populated urban area; a city specified in an address.
+        dataType: string
+        tags: NCIT_C25160 http://purl.obolibrary.org/obo/NCIT_C25160
         
+      - name: country
+        description: A collective generic term that refers here to a wide variety of dependencies, areas of special sovereignty, uninhabited islands, and other entities in addition to the traditional countries or independent states.
+        dataType: string
+        tags: NCIT_C25464 http://purl.obolibrary.org/obo/NCIT_C25464
+      
+      - name: codesystem
+        description: A systematized collection of concepts that define corresponding codes.
+        tags: NCIT_C70895 http://purl.obolibrary.org/obo/NCIT_C70895
+        
+      - name: code
+        description: A symbol or combination of symbols which is assigned to the members of a collection.
+        tags: NCIT_C25162 http://purl.obolibrary.org/obo/NCIT_C25162
+      
+      - name: iri
+        dataType: hyperlink
+        description: A unique symbol that establishes identity of the resource.
+        tags: NCIT_C165071 http://purl.obolibrary.org/obo/NCIT_C165071
+      
       - name: hasSubmittedData
+        description: An indication that a file has been submitted to a data repository.
         dataType: bool
+        tags: NCIT_C172872 http://purl.obolibrary.org/obo/NCIT_C172872
       
       - name: longitude
+        description: An imaginary great circle on the surface of a heavenly body passing through the poles at right angles to the equator.
         dataType: decimal
+        tags: NCIT_C68643 http://purl.obolibrary.org/obo/NCIT_C68643
         
       - name: latitude
+        description: The angular distance north or south between an imaginary line around a heavenly body parallel to its equator and the equator itself.
         dataType: decimal
+        tags: NCIT_C68642 http://purl.obolibrary.org/obo/NCIT_C68642
       
-  - name: statistics
+  - name: stats
     label: Summary Statistics
     description: Stats used in the dashboard
     attributes:
@@ -48,19 +87,24 @@ entities:
         readOnly: true
         
       - name: title
+        description: title to be rendered into the app (e.g., section heading, component title, table heading, etc)
         dataType: string
     
       - name: label
+        description: string that describes the value
         dataType: string
         labelAttribute: true
         lookupAttribute: true
         
       - name: value
+        description: raw data value
         dataType: decimal
         
-      - name: dashboardElement
+      - name: component
+        description: name of the component that the current will be used in
         dataType: string
         
       - name: description
+        description: additional information about this record
         dataType: text
       
