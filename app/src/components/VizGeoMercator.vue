@@ -60,6 +60,7 @@ export default {
         .translate([this.chartWidth / 2, this.chartHeight / 2])
       
       const path = d3.geoPath().projection(projection)
+
       mapLayer.selectAll('path')
         .data(this.geojson.features)
         .enter()
@@ -82,8 +83,8 @@ export default {
     }
   },
   mounted () {
-    d3.json('/europe.geojson').then(data => {
-      this.geojson = data
+    d3.json('/europe.custom.geojson').then(json => {
+      this.geojson = json
     }).then(() => {
       this.renderChart()
     })

@@ -12,9 +12,10 @@
             <GeoMercator
               chartId="ern-institutions"
               :chartData="institutionGeoData"
-              :chartWidth="400"
-              :chartHeight="700"
-              :chartCenterCoordinates="[6, 54]"
+              :chartWidth="375"
+              :chartHeight="425"
+              :chartSize="300"
+              :chartCenterCoordinates="[6, 53]"
             />
             <ChartLegend
               :labels="['Data Submitted', 'No Data']"
@@ -157,23 +158,23 @@ export default {
       data.forEach(row => delete Object.assign(row, { [newKey]: row[oldKey] })[oldKey])
     },
     subsetData (data, value) {
-      return data.filter(row => row.dashboardElement === value)
+      return data.filter(row => row.component === value)
     }
   },
   mounted () {
     Promise.all([
-      this.fetchData('/api/v2/ernstats_statistics'),
-      this.fetchData('/api/v2/ernstats_hcps')
+      this.fetchData('/api/v2/ernstats_stats'),
+      this.fetchData('/api/v2/ernstats_dataproviders')
     ]).then(response => {
       const data = response[0].items
       const mapData = response[1].items
       this.institutionGeoData = mapData
 
-      const countryEnrollmentData = this.subsetData(data, 'table_country_enrollment')
-      const healthcareProvidersData = this.subsetData(data, 'table_hcp_enrollment')
-      const diseaseGroupEnrollmentData = this.subsetData(data, 'number_patients_genturis_registry')
-      const sexAtBirthData = this.subsetData(data, 'pie_sex_at_birth')
-      const ageAtInclusionData = this.subsetData(data, 'barchart_age_at_inclusion')
+      const countryEnrollmentData = this.subsetData(data, 'table-enrollment-country')
+      const healthcareProvidersData = this.subsetData(data, 'table-enrollment-providers')
+      const diseaseGroupEnrollmentData = this.subsetData(data, 'table-enrollment-disease-group')
+      const sexAtBirthData = this.subsetData(data, 'pie-sex-at-birth')
+      const ageAtInclusionData = this.subsetData(data, 'barchart-age')
       
       this.countryEnrollment = this.extractData(countryEnrollmentData)
       this.healthcareProvidersEnrollment = this.extractData(healthcareProvidersData)
