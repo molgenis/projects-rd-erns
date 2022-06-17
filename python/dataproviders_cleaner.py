@@ -60,6 +60,13 @@ result=response[0]
     'iri': result.get('id')
 }
 
+(
+  pd.read_excel('data/dataproviders_clean.xlsx')
+  .drop(columns=['status','resolution','color_band'])
+  .to_csv('data/ernstats_dataproviders.csv', index=False, quoting=csv.QUOTE_NONNUMERIC)
+)
+
+
 #//////////////////////////////////////////////////////////////////////////////
 
 # ~ 0 ~
