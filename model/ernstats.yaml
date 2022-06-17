@@ -12,8 +12,8 @@
 name: ernstats
 label: ERN Summary Statistics
 description: Descriptives on enrolled patients and data providers
-version: 1.0.0
-date: 2022-06-03
+version: 1.1.0
+date: 2022-06-17
 
 
 defaults:
@@ -37,7 +37,17 @@ entities:
         readOnly: true
         tags: NCIT_C41206 http://purl.obolibrary.org/obo/NCIT_C41206
     
-      - name: city  
+      - name: displayName
+        description: The standardized text associated with a code in a particular code system.
+        dataType: string
+        tags: NCIT_C70896 http://purl.obolibrary.org/obo/NCIT_C70896
+      
+      - name: hasSubmittedData
+        description: An indication that a file has been submitted to a data repository.
+        dataType: bool
+        tags: NCIT_C172872 http://purl.obolibrary.org/obo/NCIT_C172872
+    
+      - name: city
         description: A large and densely populated urban area; a city specified in an address.
         dataType: string
         tags: NCIT_C25160 http://purl.obolibrary.org/obo/NCIT_C25160
@@ -46,6 +56,16 @@ entities:
         description: A collective generic term that refers here to a wide variety of dependencies, areas of special sovereignty, uninhabited islands, and other entities in addition to the traditional countries or independent states.
         dataType: string
         tags: NCIT_C25464 http://purl.obolibrary.org/obo/NCIT_C25464
+      
+      - name: longitude
+        description: An imaginary great circle on the surface of a heavenly body passing through the poles at right angles to the equator.
+        dataType: decimal
+        tags: NCIT_C68643 http://purl.obolibrary.org/obo/NCIT_C68643
+        
+      - name: latitude
+        description: The angular distance north or south between an imaginary line around a heavenly body parallel to its equator and the equator itself.
+        dataType: decimal
+        tags: NCIT_C68642 http://purl.obolibrary.org/obo/NCIT_C68642
       
       - name: codesystem
         description: A systematized collection of concepts that define corresponding codes.
@@ -59,21 +79,10 @@ entities:
         dataType: hyperlink
         description: A unique symbol that establishes identity of the resource.
         tags: NCIT_C165071 http://purl.obolibrary.org/obo/NCIT_C165071
-      
-      - name: hasSubmittedData
-        description: An indication that a file has been submitted to a data repository.
-        dataType: bool
-        tags: NCIT_C172872 http://purl.obolibrary.org/obo/NCIT_C172872
-      
-      - name: longitude
-        description: An imaginary great circle on the surface of a heavenly body passing through the poles at right angles to the equator.
-        dataType: decimal
-        tags: NCIT_C68643 http://purl.obolibrary.org/obo/NCIT_C68643
         
-      - name: latitude
-        description: The angular distance north or south between an imaginary line around a heavenly body parallel to its equator and the equator itself.
-        dataType: decimal
-        tags: NCIT_C68642 http://purl.obolibrary.org/obo/NCIT_C68642
+      - name: projectName
+        description: Original institution name as defined by the GENTURIS project (prior to cleaning)
+        dataType: string
       
   - name: stats
     label: Summary Statistics
