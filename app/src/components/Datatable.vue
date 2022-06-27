@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
+import { select, selectAll } from 'd3'
+const d3 = { select, selectAll }
 
 export default {
   name: 'DataTable',
@@ -36,12 +37,25 @@ export default {
     }
   },
   methods: {
+    dataTypeToCssClass (cell) {
+      let css = `column-${cell.column} data-value`
+      const type = typeof cell.value
+      css += ` value-${type}`
+      if (type === 'number') {
+        if (cell.value > 0) {
+          css += ' value-positive'
+        } else if (cell.value < 0) {
+          css += ' value-negative'
+        } else {
+          css += ' value-zero'
+        }
+      }
+      return css
+    },
     renderTable () {
-      // select <table> element
       const tableId = this.$el.childNodes[0].id
       const table = d3.select(`#${tableId}`)
       
-      // create <thead> element
       const tableHeader = table.append('thead')
         .attr('class', () => this.visuallyHideHeader ? 'visually-hidden-header' : '')
       tableHeader.append('tr')
@@ -52,14 +66,12 @@ export default {
         .attr('data-column-name', column => column)
         .text(column => column)
 
-      // create <tbody> element
       const tableBody = table.append('tbody')
       const tableRows = tableBody.selectAll('tr')
         .data(this.data)
         .enter()
         .append('tr')
-        
-      // for each row in the input data, create <td> element
+
       const tableCells = tableRows.selectAll('tr')
         .data(row => {
           return this.columnOrder.map(column => {
@@ -71,21 +83,7 @@ export default {
         .attr('data-value', cell => cell.value)
         .text(cell => cell.value)
 
-      tableCells.attr('class', cell => {
-        let css = `column-${cell.column} data-value`
-        const type = typeof cell.value
-        css += ` value-${type}`
-        if (type === 'number') {
-          if (cell.value > 0) {
-            css += ' value-positive'
-          } else if (cell.value < 0) {
-            css += ' value-negative'
-          } else {
-            css += ' value-zero'
-          }
-        }
-        return css
-      })
+      tableCells.attr('class', cell => this.dataTypeToCssClass(cell))
     }
   },
   mounted () {

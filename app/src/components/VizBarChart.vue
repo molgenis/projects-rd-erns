@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
+import { select, selectAll, scaleBand, axisBottom, max, min, scaleLinear, axisLeft } from 'd3'
+const d3 = { select, selectAll, scaleBand, axisBottom, max, min, scaleLinear, axisLeft }
 
 export default {
   props: {
@@ -120,9 +121,6 @@ export default {
           .attr('class', 'chart-text chart-axis-title chart-axis-y')
           .attr('transform', 'rotate(-90)')
           .attr('transform-origin', 'top left')
-          // .attr('x', (this.chartMargins.left / 2))
-          // .attr('y', (this.chartHeight / 2) + (this.chartMargins.top * -0.6))
-          // .attr('x', (this.chartHeight / 2) + (this.chartMargins.top * -0.6))
           .attr('x', -(this.chartHeight / 2))
           .attr('y', this.chartMargins.left / 2)
           .attr('text-anchor', 'middle')

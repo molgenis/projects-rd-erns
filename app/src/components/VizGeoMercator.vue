@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
+import { select, selectAll, geoMercator, geoPath, json } from 'd3'
+const d3 = { select, selectAll, geoMercator, geoPath, json }
 
 export default {
   props: {

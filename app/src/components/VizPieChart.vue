@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import * as d3 from 'd3'
+import { select, selectAll, scaleOrdinal, pie, arc } from 'd3'
+const d3 = { select, selectAll, scaleOrdinal, pie, arc }
 
 export default {
   name: 'PieChart',
