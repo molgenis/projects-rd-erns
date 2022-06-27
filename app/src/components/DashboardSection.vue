@@ -1,12 +1,12 @@
 <template>
-  <section :id="id" class="dashboard-section">
+  <section class="dashboard-section">
     <slot></slot>
   </section>
 </template>
 
 <script>
 export default {
-  props: ['id']
+  name: 'dashboard-section'
 }
 </script>
 
