@@ -1,91 +1,95 @@
 <template>
-    <div id="dashboard-container">
-      <LoadingScreen v-if="loading" />
-      <DashboardUI id="ern-dashboard" :loading="loading" v-else>
-        <DashboardSection
-          id="viz-map"
-          aria-labelledBy="viz-map-title"
-        >
-          <h2 id="viz-map-title" class="chart-title">
-            Status of data submitted by Healthcare Providers
-          </h2>
-            <GeoMercator
-              chartId="ern-institutions"
-              :chartData="institutionGeoData"
-              :chartWidth="375"
-              :chartHeight="425"
-              :chartSize="300"
-              :chartCenterCoordinates="[6, 53]"
-            />
-            <ChartLegend
-              :labels="['Data Submitted', 'No Data']"
-              :colors="['#3b3b3b', '#94a6da']"
-            />
-        </DashboardSection>
-        <DashboardSection id="viz-table-patient-enrollment">
-          <h2 id="patient-enrollment-summary-title" class="visually-hidden">
-            Summaries on Patient Enrollment
-          </h2>
-          <DataTable
-            tableId="country-enrollment"
-            class="ern-table-summary"
-            :data="countryEnrollment.data"
-            :columnOrder='["label","value"]'
-            :caption="countryEnrollment.title"
-            :visuallyHideHeader="true"
+  <div id="dashboard-container">
+    <LoadingScreen v-if="loading" />
+    <DashboardUI id="ern-dashboard" :loading="loading" v-else>
+      <DashboardSection
+        id="viz-map"
+        aria-labelledBy="viz-map-title"
+      >
+        <h2 id="viz-map-title" class="chart-title">
+          Status of data submitted by Healthcare Providers
+        </h2>
+          <GeoMercator
+            chartId="ern-institutions"
+            :chartData="institutionGeoData"
+            :chartWidth="400"
+            :chartHeight="400"
+            :chartSize="114"
+            :chartCenterCoordinates="[6, 53]"
           />
-        </DashboardSection>
-        <DashboardSection id="viz-table-hcp-enrollment">
-          <DataTable
-            tableId="hcp-enrollment"
-            class="ern-table-summary"
-            :data="healthcareProvidersEnrollment.data"
-            :columnOrder='["label", "value"]'
-            :caption="healthcareProvidersEnrollment.title"
-            :visuallyHideHeader="true"
+          <ChartLegend
+            :labels="['Data Submitted', 'No Data']"
+            :colors="['#3b3b3b', '#94a6da']"
           />
-        </DashboardSection>
-        <DashboardSection id="viz-pie-chart">
-          <h2 id="sex-at-birth-title" class="chart-title">
-            {{ sexAtBirth.title }}
-          </h2>
-          <PieChart
-            chartId="sex-at-birth-chart"
-            :chartData="sexAtBirth.data"
-            class="m-auto"
-            :chartColors="['#d7e0f1', '#355cb8', '#7e98d4']"
-          />
-        </DashboardSection>
-        <DashboardSection id="viz-age-bar-chart">
-          <h2 id="age-at-inclusion-title" class="chart-title">
-            {{ ageAtInclusion.title }}
-          </h2>
-          <BarChart
-            chartId="age-at-inclusion-chart"
-            :chartData="ageAtInclusion.data"
-            :chartHeight="350"
-            :chartWidth="600"
-            barFill="#355cb8"
-            xvar="label"
-            yvar="value"
-            xAxisLabel="Age Groups"
-            yAxisLabel="Number of Patients"
-          />
-        </DashboardSection>
-        <DashboardSection id="viz-table-disease-enrollment">
-          <h2 id="patient-enrollment-summary-title" class="visually-hidden">
-            Summary of patients enrolled by thematic disease group
-          </h2>
-          <DataTable
-            tableId="disease-group-enrollment-table"
-            class="ern-table-dataset"
-            :data="diseaseGroupEnrollment.data"
-            :columnOrder='["Thematic Disease Groups", "Number of Patients"]'
-            :caption="diseaseGroupEnrollment.title"
-          />
-        </DashboardSection>
-      </DashboardUI>
-    </div>
+      </DashboardSection>
+      <DashboardSection id="viz-table-patient-enrollment">
+        <h2 id="patient-enrollment-summary-title" class="visually-hidden">
+          Summaries on Patient Enrollment
+        </h2>
+        <DataTable
+          tableId="country-enrollment"
+          class="ern-table-summary"
+          :data="countryEnrollment.data"
+          :columnOrder='["label","value"]'
+          :caption="countryEnrollment.title"
+          :visuallyHideHeader="true"
+        />
+      </DashboardSection>
+      <DashboardSection id="viz-table-hcp-enrollment">
+        <DataTable
+          tableId="hcp-enrollment"
+          class="ern-table-summary"
+          :data="healthcareProvidersEnrollment.data"
+          :columnOrder='["label", "value"]'
+          :caption="healthcareProvidersEnrollment.title"
+          :visuallyHideHeader="true"
+        />
+      </DashboardSection>
+      <DashboardSection id="viz-pie-chart">
+        <h2 id="sex-at-birth-title" class="chart-title">
+          {{ sexAtBirth.title }}
+        </h2>
+        <PieChart
+          chartId="sex-at-birth-chart"
+          :chartData="sexAtBirth.data"
+          :chartHeight="200"
+          :chartWidth="300"
+          :chartMargins="5"
+          class="m-auto"
+          :chartColors="['#d7e0f1', '#355cb8', '#7e98d4']"
+        />
+      </DashboardSection>
+      <DashboardSection id="viz-age-bar-chart">
+        <h2 id="age-at-inclusion-title" class="chart-title">
+          {{ ageAtInclusion.title }}
+        </h2>
+        <BarChart
+          chartId="age-at-inclusion-chart"
+          :chartData="ageAtInclusion.data"
+          :chartHeight="250"
+          :chartWidth="600"
+          :chartMargins="{top: 10, right: 10, bottom: 60, left: 60}"
+          barFill="#355cb8"
+          xvar="label"
+          yvar="value"
+          xAxisLabel="Age Groups"
+          yAxisLabel="Number of Patients"
+        />
+      </DashboardSection>
+      <DashboardSection id="viz-table-disease-enrollment">
+        <h2 id="patient-enrollment-summary-title" class="visually-hidden">
+          Summary of patients enrolled by thematic disease group
+        </h2>
+        <DataTable
+          tableId="disease-group-enrollment-table"
+          class="ern-table-dataset"
+          :data="diseaseGroupEnrollment.data"
+          :columnOrder='["Thematic Disease Groups", "Number of Patients"]'
+          :caption="diseaseGroupEnrollment.title"
+        />
+      </DashboardSection>
+    </DashboardUI>
+  </div>
 </template>
 
 <script>
