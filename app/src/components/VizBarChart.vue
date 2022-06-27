@@ -42,7 +42,7 @@ export default {
         return {
           top: 30,
           right: 30,
-          bottom: 70,
+          bottom: 60,
           left: 60
         }
       }
@@ -110,7 +110,7 @@ export default {
       if (this.xAxisTitle !== null) {
         svg.append('text')
           .attr('x', (this.chartWidth / 2) + (this.chartMargins.left * -0.35))
-          .attr('y', this.chartHeight - (this.chartMargins.bottom / 2))
+          .attr('y', this.chartHeight - (this.chartMargins.bottom / 4.5))
           .attr('text-anchor', 'middle')
           .style('font-size', '12pt')
           .text(this.xlabel)
@@ -122,7 +122,7 @@ export default {
           .attr('transform', 'rotate(-90)')
           .attr('transform-origin', 'top left')
           .attr('x', -(this.chartHeight / 2))
-          .attr('y', this.chartMargins.left / 2)
+          .attr('y', this.chartMargins.left / 3)
           .attr('text-anchor', 'middle')
           .style('font-size', '12pt')
           .text(this.ylabel)
@@ -134,3 +134,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.d3-bar-chart {
+  svg {
+    display: block;
+    margin: 0 auto;
+  }
+}
+</style>

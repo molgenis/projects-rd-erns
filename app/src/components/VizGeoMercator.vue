@@ -47,7 +47,7 @@ export default {
   methods: {
     renderChart () {
       const svg = d3.select(`#${this.$el.childNodes[0].id}`)
-        .attr('width', '100%')
+        .attr('width', this.chartWidth)
         .attr('height', this.chartHeight)
         .attr('preserveAspectRatio', 'xMinYMin')
         .attr('viewbox', `0 0 ${this.chartSize} ${this.chartSize / 2}`)
@@ -93,5 +93,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.d3-geo-mercator {
+  svg {
+    display: block;
+    margin: 0 auto;
+  }
+}
 </style>

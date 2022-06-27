@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<styles lang="scss">
+<style lang="scss">
 
 @keyframes spin {
   from {
@@ -89,4 +89,4 @@ export default {
     }
   }
 }
-</styles>
+</style>

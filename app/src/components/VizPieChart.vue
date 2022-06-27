@@ -129,9 +129,10 @@ export default {
 }
 </script>
 
-<styles lang="scss">
+<style lang="scss">
 .d3-pie-chart {
   svg {
+    display: block;
     margin: 0 auto;
   }
   .pie-chart-content {
@@ -140,4 +141,4 @@ export default {
     }
   }
 }
-</styles>
+</style>

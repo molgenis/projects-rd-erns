@@ -14,7 +14,6 @@
   font-weight: bold;
   line-height: 1.4;
   letter-spacing: 0.03em;
-  padding: 1em 0;
   text-align: center;
   color: #252525;
 }
@@ -52,17 +51,37 @@
 #ern-dashboard {
   background-color: #f6f6f6;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
   grid-template-rows: auto;
+  grid-template-columns: 2fr 1fr 1fr;
   grid-template-areas:
     "map tablePatient piechart"
     "map tableHcp piechart"
     "map barchart barchart"
     "table table table";
 
-  $gap: 16px;
+  $gap: 1.5em;
   column-gap: $gap;
   row-gap: $gap;
+  
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "map map"
+      "tablePatient tableHcp"
+      "piechart barchart"
+      "table table";
+  }
+  
+  @media screen and (max-width: 824px) {
+    grid-template-columns: 1fr;
+    grid-template-areas: 
+      "map"
+      "tablePatient"
+      "tableHcp"
+      "piechart"
+      "barchart"
+      "table";
+  }
 }
 
 #viz-map {
@@ -89,12 +108,10 @@
 }
 
 #disease-group-enrollment-table {
-  table {
-    thead {
-      tr {
-        th:last-child {
-          text-align: right;
-        }
+  thead {
+    tr {
+      th[data-column-name="Number of Patients"] {
+        text-align: right;
       }
     }
   }
