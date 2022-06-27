@@ -14,6 +14,10 @@ export default {
       type: String,
       required: true
     },
+    geojson: {
+      type: Object,
+      required: true
+    },
     chartData: {
       type: Array,
       required: true
@@ -37,11 +41,6 @@ export default {
     chartScale: {
       type: Number,
       default: 1.1
-    }
-  },
-  data () {
-    return {
-      geojson: null
     }
   },
   methods: {
@@ -84,11 +83,7 @@ export default {
     }
   },
   mounted () {
-    d3.json('/europe.custom.geojson').then(json => {
-      this.geojson = json
-    }).then(() => {
-      this.renderChart()
-    })
+    this.renderChart()
   }
 }
 </script>

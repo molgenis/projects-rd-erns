@@ -28,7 +28,6 @@ const htmlTemplate = () => {
 const PROXY_TARGET = 'https://genturis-acc.molgeniscloud.org/'
 
 module.exports = {
-  transpileDependencies: ['@molgenis-ui/components-library'],
   runtimeCompiler: true,
   outputDir: 'dist',
   publicPath: process.env.NODE_ENV === 'production'
@@ -43,6 +42,12 @@ module.exports = {
         args[0].version = process.env.NODE_ENV !== 'production' ? previewText : ''
         return args
       })
+    config.module
+      .rule('json-loader')
+      .test(/\.geojson$/)
+      .use('json-loader')
+      .loader('json-loader')
+      .end()
   },
   configureWebpack: config => {
     config.plugins.push(
@@ -73,43 +78,45 @@ module.exports = {
     // In CI mode, Safari cannot contact "localhost", so as a workaround, run the dev server using the jenkins agent pod dns instead.
     host: process.env.JENKINS_AGENT_NAME || 'localhost',
     // Used to proxy a external API server to have someone to talk to during development
-    proxy: process.env.NODE_ENV !== 'development' ? undefined : {
-      '^/login': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/api': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/js': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/img': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/logo': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/fonts': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/theme': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/app-ui-context': {
-        target: PROXY_TARGET,
-        changeOrigin: true
-      },
-      '/logout': {
-        target: PROXY_TARGET,
-        changeOrigin: true
+    proxy: process.env.NODE_ENV !== 'development'
+      ? undefined
+      : {
+        '^/login': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/api': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/js': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/img': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/logo': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/fonts': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/theme': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/app-ui-context': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        },
+        '/logout': {
+          target: PROXY_TARGET,
+          changeOrigin: true
+        }
       }
-    }
   }
 }
