@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <router-view></router-view>
+  <div class="app-page">
+    <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ern-dashboard'
+  name: 'page-ui'
 }
 </script>
