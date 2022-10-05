@@ -13,7 +13,7 @@
       <h2 id="genturis-section-welcome-title">
         Welcome to the GENTURIS registry
       </h2>
-      <p>The GENTURIS registry is the European registry for patients with one of the genetic tumour risk syndromes (genturis). The registry is affiliated to the European Reference Network for all patients with one of the genetic tumour risk syndromes (ERN GENTURIS).</p>
+      <p>The <strong>GENTURIS</strong> registry is the European registry for patients with one of the genetic tumour risk syndromes (genturis). The registry is affiliated to the European Reference Network for all patients with one of the genetic tumour risk syndromes (ERN GENTURIS).</p>
     </Section>
     <Section
       id="genturis-section-quicklinks"
@@ -22,9 +22,9 @@
       <h2 id="genturis-section-quicklinks-title">
         Quick Links
       </h2>
-      <router-link :to="{name: 'dashboard'}">
-        Dashboard
-      </router-link>
+      <div class="quicklink-cards">
+        <RouterLinkCard :to="{name: 'dashboard'}" label="Dashboard" />
+      </div>
     </Section>
     <Section
       id="genturis-section-aims"
@@ -77,23 +77,33 @@
 import Page from '../components/Page.vue'
 import Header from '../components/Header.vue'
 import Section from '../components/Section.vue'
+import RouterLinkCard from '../components/RouterLinkCard.vue'
 
 export default {
   name: 'home-page',
   components: {
     Page,
     Header,
-    Section
+    Section,
+    RouterLinkCard
   }
 }
 </script>
 
 <style lang="scss" scoped>
-#genturis-section-welcome {
-  background-color: $secondary;
-}
-
+#genturis-section-welcome,
 #genturis-section-contact {
   background-color: $gray-000;
 }
+#genturis-section-quicklinks {
+  background-color: $secondary;
+}
+
+.quicklink-cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
 </style>

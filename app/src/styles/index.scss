@@ -1,3 +1,23 @@
+body {
+  background-color: $gray-050;
+}
+
+.mg-page,
+.mg-app,
+.container-fluid,
+.row,
+.col-sm-8,
+.col-sm-3 {
+  padding: 0;
+}
+.mg-page .mg-page-content {
+  margin-top: 0;
+}
+
+footer.footer {
+  display: none;
+}
+
 .visually-hidden {
   position: absolute;
   clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
@@ -9,12 +29,8 @@
   white-space: nowrap;
 }
 
-body {
-  background-color: $gray-050;
-}
-
 .app-page {
-  font-size: 16pt;
+  font-size: 15pt;
 
   h1,h2,h3,h4,h5,h6 {
     color: $blue-900;
@@ -23,16 +39,26 @@ body {
     margin-bottom: 16px;
     text-align: center;
   }
+
   p {
    color: $gray-700;
    line-height: 1.5; 
+
+   strong {
+    color: $blue-900;
+   }
   }
+  
+  address {
+    font-size: 14pt;
+    margin-left: 2.25em;
+    span {
+      display: block;
+    }
+  }
+  
 }
 
-address {
-  font-size: 14pt;
-  margin-left: 2.25em;
-  span {
-    display: block;
-  }
+.molgenis_logo {
+  width: 124px;
 }
