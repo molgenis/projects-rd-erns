@@ -15,17 +15,26 @@
       </h2>
       <p>The <strong>GENTURIS</strong> registry is the European registry for patients with one of the genetic tumour risk syndromes (genturis). The registry is affiliated to the European Reference Network for all patients with one of the genetic tumour risk syndromes (ERN GENTURIS).</p>
     </Section>
-    <Section
-      id="genturis-section-quicklinks"
-      aria-labelledby="genturis-section-quicklinks-title"
-    >
-      <h2 id="genturis-section-quicklinks-title">
-        Quick Links
-      </h2>
-      <div class="quicklink-cards">
-        <RouterLinkCard :to="{name: 'dashboard'}" label="Dashboard" />
-      </div>
-    </Section>
+    <section class="quicklink-cards" aria-labelledby="quicklinks-card-title">
+      <h2 class="visually-hidden" id="quicklinks-card-title">quick links</h2>
+      <RouterLinkCard
+        id="quicklinks-about"
+        :to="{name: 'about'}"
+        label="About Us"
+      />
+      <RouterLinkCard
+        id="quicklink-documents"
+        :to="{name: 'documents'}"
+        label="Documents"
+        :imageSrc="require('@/assets/images-wesley-tingey-documents.jpg')"
+      />
+      <RouterLinkCard
+        id="quicklink-dashboard"
+        :to="{name: 'dashboard'}"
+        label="Dashboard"
+        :imageSrc="require('@/assets/images-markus-winkler-dashboard.jpg')"
+      />
+    </section>
     <Section
       id="genturis-section-aims"
       aria-labelledby="genturis-section-aims-title"
@@ -52,8 +61,8 @@
       </h2>
       <p>For further information please contact the GENTURIS registry coordination team via:</p>
       <address>
-        <span>Radboud university medical center</span>
-        <span>GENTURIS registry</span>
+        <span>Radboud University Medical Center</span>
+        <span>GENTURIS Registry</span>
         <span>Department of Human Genetics</span>
         <span>Geert Grooteplein zuid 10</span>
         <span>6525 GA Nijmegen</span>
@@ -90,20 +99,43 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 #genturis-section-welcome,
 #genturis-section-contact {
   background-color: $gray-000;
 }
 #genturis-section-quicklinks {
-  background-color: $secondary;
+  background-color: $brand-050;
 }
 
 .quicklink-cards {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  
+  .router-link-card {
+    flex-grow: 1;
+  }
+}
+
+#quicklinks-about {
+  background-color: $blue-800;
+}
+
+#quicklink-documents {
+  .card-bg-filter {
+    background-color: $brand-900;
+    opacity: 0.80;
+  }
+}
+
+#quicklink-dashboard {
+  .card-bg-filter {
+    background-color: $blue-800;
+    opacity: 0.65;
+  }
 }
 
 </style>

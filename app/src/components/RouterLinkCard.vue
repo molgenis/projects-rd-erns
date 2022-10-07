@@ -1,6 +1,12 @@
 <template>
-  <div class="router-link-card">
-    <router-link :to="to">{{label}}</router-link>
+  <div
+    :class="imageSrc ? 'router-link-card card-bg-image' : 'router-link-card'"
+    :style="imageSrc ? `background-image: url(${imageSrc})` : ''"
+  >
+    <div class="card-content">
+      <router-link :to="to">{{label}}</router-link>
+    </div>
+    <div class="card-bg-filter" v-if="imageSrc" aria-hidden="false" />
   </div>
 </template>
 
@@ -13,21 +19,50 @@ export default {
     },
     label: {
       type: String
+    },
+    imageSrc: {
+      type: String
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .router-link-card {
-  box-sizing: content-box;
-  padding: 1.25em;
-  background-color: $blue-900;
-  border-radius: 6px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: $gray-900-alt;
+  padding: 24px;
   
-  a {
-    color: $gray-050;
+  $card-sizing: 12em;
+  width: $card-sizing;
+  height: $card-sizing;
+  
+  .card-content {
+    z-index: 1;
+    a {
+      color: $gray-050;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: bold;
+      font-size: 14pt;
+    }
+  }
+  
+  &.card-bg-image {
+    background-size: cover;
+    background-position: 0 44%;
+    
+    .card-bg-filter {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $black-transparent-100;
+    }
   }
 }
 </style>

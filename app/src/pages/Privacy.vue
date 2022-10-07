@@ -46,8 +46,8 @@
       <p>For any questions about the privacy policy of the GENTURIS registry, please contact the GENTURIS registry coordination team.</p>
       <p>You have the right to be forgotten and removed completely from the GENTURIS registry contact database. To request this, please contact the GENTURIS registry coordinator.</p>
       <address>
-        <span>Radboud university medical center</span>
-        <span>GENTURIS registry</span>
+        <span>Radboud University Medical Center</span>
+        <span>GENTURIS Registry</span>
         <span>Department of Human Genetics</span>
         <span>Geert Grooteplein zuid 10</span>
         <span>6525 GA Nijmegen</span>
