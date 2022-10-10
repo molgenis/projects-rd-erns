@@ -12,8 +12,8 @@
 name: ernstats
 label: ERN Summary Statistics
 description: Descriptives on enrolled patients and data providers
-version: 1.1.0
-date: 2022-06-17
+version: 1.1.1
+date: 2022-10-10
 
 
 defaults:
@@ -89,7 +89,6 @@ entities:
     description: Stats used in the dashboard
     attributes:
       - name: id
-        auto: true
         idAttribute: true
         nillable: false
         unique: true
@@ -108,6 +107,11 @@ entities:
       - name: value
         description: raw data value
         dataType: decimal
+        
+      - name: valueOrder
+        description: integer specifying the order of a value in an array (ideal for tables, charts)
+        dataType: int
+        defaultValue: 0
         
       - name: component
         description: name of the component that the current will be used in

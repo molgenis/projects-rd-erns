@@ -4,7 +4,7 @@
 
 | Name | Description | Parent |
 |:---- |:-----------|:------|
-| ernstats | Descriptives on enrolled patients and data providers (v1.1.0, 2022-06-17) | - |
+| ernstats | Descriptives on enrolled patients and data providers (v1.1.1, 2022-10-10) | - |
 
 ## Entities
 
@@ -43,6 +43,7 @@ Stats used in the dashboard
 | title | - | title to be rendered into the app (e.g., section heading, component title, table heading, etc) | string |
 | label | - | string that describes the value | string |
 | value | - | raw data value | decimal |
+| valueOrder | - | integer specifying the order of a value in an array (ideal for tables, charts) | int |
 | component | - | name of the component that the current will be used in | string |
 | description | - | additional information about this record | text |
 

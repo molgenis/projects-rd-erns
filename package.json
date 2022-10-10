@@ -6,6 +6,7 @@
   "author": "davidruvolo51 <davidruvolo51@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "venv": "source ./venv/bin/activate",
     "emx:build-genturis": "python build-emx.py profiles/ern_genturis.yaml"
   }
 }
