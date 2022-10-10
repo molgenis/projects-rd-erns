@@ -1,34 +1,31 @@
 <template>
   <div id="dashboard-container">
-    <div class="loading-screen" v-if="loading">
-      <div class="loading-screen-content">
-        <div class="loading-screen-spinner">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="spinner-gear"
-            fill="none"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-        </div>
-        <p class="message">Loading</p>
-      </div>
+    <LoadingScreen v-if="loading"/>
+    <div class="error-message" v-else-if="!loading & loadingError">
+      <p><strong>Unable to retrive data</strong></p>
+      <output>{{ loadingError }}</output>
     </div>
-    <DashboardUI id="ern-dashboard" :loading="loading" v-else>
+    <Dashboard id="ern-dashboard" :loading="loading" v-else>
+      <DataHighlightContainer id="ern-data-highlights" aria-labelledby="ern-highlights-title">
+        <p id="ern-highlights-title" class="visually-hidden">
+          summary of enrollment for the ERN Genturis registry. This includes total patients to date, total number of actively enrolling countries, and the total number of healthcare providers enrolling patient.
+        </p>
+        <DataHighlightBox
+          id="enrolled-patients"
+          title="Total Patients Enrolled"
+          :value="`${patientEnrollment}`"
+        />
+        <DataHighlightBox
+          id="enrollment-by-countries"
+          title="Countries Enrolling"
+          :value="`${countryEnrollment}`"
+        />
+        <DataHighlightBox
+          id="enrollment-by-patients"
+          title="Healthcare Providers Enrolling"
+          :value="`${providersEnrollment}`"
+        />
+      </DataHighlightContainer>
       <DashboardSection
         id="viz-map"
         aria-labelledBy="viz-map-title"
@@ -40,38 +37,13 @@
             chartId="ern-institutions"
             :chartData="institutionGeoData"
             :geojson="geojson"
-            :chartWidth="400"
-            :chartHeight="400"
+            :chartWidth="475"
+            :chartHeight="500"
             :chartSize="114"
             :chartCenterCoordinates="[6, 53]"
+            :legendLabels="['Data Submitted', 'No Data']"
+            :legendColors="['#3b3b3b', '#94a6da']"
           />
-          <ChartLegend
-            :labels="['Data Submitted', 'No Data']"
-            :colors="['#3b3b3b', '#94a6da']"
-          />
-      </DashboardSection>
-      <DashboardSection id="viz-table-patient-enrollment">
-        <h2 id="patient-enrollment-summary-title" class="visually-hidden">
-          Summaries on Patient Enrollment
-        </h2>
-        <DataTable
-          tableId="country-enrollment"
-          class="ern-table-summary"
-          :data="countryEnrollment.data"
-          :columnOrder='["label","value"]'
-          :caption="countryEnrollment.title"
-          :visuallyHideHeader="true"
-        />
-      </DashboardSection>
-      <DashboardSection id="viz-table-hcp-enrollment">
-        <DataTable
-          tableId="hcp-enrollment"
-          class="ern-table-summary"
-          :data="healthcareProvidersEnrollment.data"
-          :columnOrder='["label", "value"]'
-          :caption="healthcareProvidersEnrollment.title"
-          :visuallyHideHeader="true"
-        />
       </DashboardSection>
       <DashboardSection id="viz-pie-chart">
         <h2 id="sex-at-birth-title" class="chart-title">
@@ -98,8 +70,10 @@
           :chartWidth="600"
           :chartMargins="{top: 10, right: 10, bottom: 60, left: 60}"
           barFill="#355cb8"
+          barHoverFill="#45A5C8"
           xvar="label"
           yvar="value"
+          :yMax="50"
           xAxisLabel="Age Groups"
           yAxisLabel="Number of Patients"
         />
@@ -116,43 +90,45 @@
           :caption="diseaseGroupEnrollment.title"
         />
       </DashboardSection>
-    </DashboardUI>
+    </Dashboard>
   </div>
 </template>
 
 <script>
-import DashboardUI from '../components/Dashboard.vue'
+import LoadingScreen from '../components/LoadingScreen.vue'
+import Dashboard from '../components/Dashboard.vue'
 import DashboardSection from '../components/DashboardSection.vue'
+
+import DataHighlightBox from '../components/DataHighlightBox.vue'
+import DataHighlightContainer from '../components/DataHighlightContainer.vue'
 import DataTable from '../components/Datatable.vue'
 import PieChart from '../components/VizPieChart.vue'
 import BarChart from '../components/VizBarChart.vue'
 import GeoMercator from '../components/VizGeoMercator.vue'
-import ChartLegend from '../components/VizLegend.vue'
+
 import geojson from '../assets/europe.custom.geojson'
 
 export default {
   name: 'ern-dashboard',
   components: {
-    DashboardUI,
+    LoadingScreen,
+    Dashboard,
     DashboardSection,
+    DataHighlightBox,
+    DataHighlightContainer,
     DataTable,
     PieChart,
     BarChart,
-    GeoMercator,
-    ChartLegend
+    GeoMercator
   },
   data () {
     return {
       loading: true,
+      loadingError: null,
       institutionGeoData: [],
-      countryEnrollment: {
-        title: null,
-        data: []
-      },
-      hcpEnrollment: {
-        title: null,
-        data: []
-      },
+      patientEnrollment: null,
+      countryEnrollment: null,
+      providersEnrollment: null,
       sexAtBirth: {
         title: null,
         data: {}
@@ -190,6 +166,11 @@ export default {
     },
     subsetData (data, value) {
       return data.filter(row => row.component === value)
+    },
+    sortData (data, column) {
+      return data.sort((current, next) => {
+        return current[column] < next[column] ? -1 : 1
+      })
     }
   },
   mounted () {
@@ -201,16 +182,19 @@ export default {
       const mapData = response[1].items
       this.institutionGeoData = mapData
 
-      const countryEnrollmentData = this.subsetData(data, 'table-enrollment-country')
-      const healthcareProvidersData = this.subsetData(data, 'table-enrollment-providers')
+      const patientEnrollment = this.subsetData(data, 'table-enrollment-patients')
+      const countryEnrollment = this.subsetData(data, 'table-enrollment-country')
+      const providersEnrollment = this.subsetData(data, 'table-enrollment-providers')
       const diseaseGroupEnrollmentData = this.subsetData(data, 'table-enrollment-disease-group')
       const sexAtBirthData = this.subsetData(data, 'pie-sex-at-birth')
       const ageAtInclusionData = this.subsetData(data, 'barchart-age')
       
-      this.countryEnrollment = this.extractData(countryEnrollmentData)
-      this.healthcareProvidersEnrollment = this.extractData(healthcareProvidersData)
+      this.patientEnrollment = patientEnrollment[0].value
+      this.countryEnrollment = countryEnrollment[0].value
+      this.providersEnrollment = providersEnrollment[0].value
 
       this.diseaseGroupEnrollment = this.extractData(diseaseGroupEnrollmentData)
+      this.diseaseGroupEnrollment.data = this.sortData(this.diseaseGroupEnrollment.data, 'valueOrder')
       this.renameKey(this.diseaseGroupEnrollment.data, 'label', 'Thematic Disease Groups')
       this.renameKey(this.diseaseGroupEnrollment.data, 'value', 'Number of Patients')
 
@@ -218,56 +202,18 @@ export default {
       this.sexAtBirth.data = this.asDataObject(sexAtBirthData, 'label', 'value')
 
       this.ageAtInclusion = this.extractData(ageAtInclusionData)
+      this.ageAtInclusion.data = this.sortData(this.ageAtInclusion.data, 'valueOrder')
     }).then(() => {
       this.loading = false
+    }).catch(error => {
+      this.loading = false
+      this.loadingError = error
     })
   }
 }
 </script>
 
-<style lang="scss" scoped>
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loading-screen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100vh;
-  background-color: hsl(220, 50%, 88%);
-  color: hsl(220, 50%, 18%);
-  opacity: 0.8;
-  
-  .loading-screen-content {
-    width: 90%;
-    margin: 0 auto;
-    z-index: 1;
-    text-align: center;
-    
-    $icon-size: 62px;
-    .spinner-gear {
-      width: $icon-size;
-      height: $icon-size;
-      transform-origin: center;
-      animation: spin 6s linear infinite;
-    }
-    
-    .message {
-      font-size: 18pt;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: bold;
-    }
-  }
-}
+<style lang="scss">
 
 .chart-title {
   font-size: 14pt;
@@ -311,48 +257,34 @@ export default {
 #ern-dashboard {
   background-color: #f6f6f6;
   display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-areas:
-    "map tablePatient piechart"
-    "map tableHcp piechart"
-    "map barchart barchart"
-    "table table table";
+    "highlights highlights"
+    "map piechart"
+    "map barchart"
+    "table table";
 
-  $gap: 1.5em;
+  $gap: 1.6em;
   column-gap: $gap;
   row-gap: $gap;
-  
-  @media screen and (max-width: 1200px) {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "map map"
-      "tablePatient tableHcp"
-      "piechart barchart"
-      "table table";
-  }
   
   @media screen and (max-width: 824px) {
     grid-template-columns: 1fr;
     grid-template-areas:
+      "highlights"
       "map"
-      "tablePatient"
-      "tableHcp"
       "piechart"
       "barchart"
       "table";
   }
 }
 
-#viz-map {
-  grid-area: map;
-}
-#viz-table-patient-enrollment {
-  grid-area: tablePatient;
+#ern-data-highlights {
+  grid-area: highlights;
 }
 
-#viz-table-hcp-enrollment {
-  grid-area: tableHcp;
+#viz-map {
+  grid-area: map;
 }
 
 #viz-pie-chart {
@@ -370,7 +302,7 @@ export default {
 #disease-group-enrollment-table {
   thead {
     tr {
-      th[data-column-name="Number of Patients"] {
+      th[data-column-index="1"] {
         text-align: right;
       }
     }

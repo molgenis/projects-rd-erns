@@ -12,7 +12,7 @@ export default {
 
 <style>
 .dashboard-section {
-  box-sizing: border-box;
+  box-sizing: padding-box;
   background-color: #ffffff;
   padding: 1em;
   border-radius: 8px;
