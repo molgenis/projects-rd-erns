@@ -22,6 +22,9 @@ export default {
       type: String,
       require: true
     },
+    yMax: {
+      type: Number
+    },
     xAxisLabel: String,
     yAxisLabel: String,
     chartData: {
@@ -49,7 +52,11 @@ export default {
     },
     barFill: {
       type: String,
-      default: '#69b3a2'
+      default: '#6C85B5'
+    },
+    barHoverFill: {
+      type: String,
+      default: '#163D89'
     }
   },
   computed: {
@@ -75,7 +82,7 @@ export default {
         
       const xAxis = d3.scaleBand()
         .range([0, widthMarginAdjusted])
-        .domain(this.chartData.map(d => d[this.xvar]))
+        .domain(this.chartData.map(row => row[this.xvar]))
         .padding(0.2)
       
       chartArea.append('g')
@@ -85,8 +92,7 @@ export default {
         .style('text-anchor', 'middle')
         .style('font-size', '11pt')
         
-      // properly calcuate ymax
-      const ymax = d3.max(this.chartData, d => d[this.yvar])
+      const ymax = this.yMax ? this.yMax : d3.max(this.chartData, row => row[this.yvar])
       const yAxis = d3.scaleLinear()
         .domain([0, ymax])
         .range([heightMarginAdjusted, 0])
@@ -97,36 +103,64 @@ export default {
         .selectAll('text')
         .style('font-size', '11pt')
 
-      chartArea.selectAll('vertical-bars')
+      const chartColumns = chartArea.selectAll('columns')
         .data(this.chartData)
         .enter()
         .append('rect')
-        .attr('x', d => xAxis(d[this.xvar]))
-        .attr('y', d => yAxis(d[this.yvar]))
+        .attr('class', 'chart-column')
+        .attr('data-column', row => row[this.xvar])
+        .attr('x', row => xAxis(row[this.xvar]))
+        .attr('y', row => yAxis(row[this.yvar]))
         .attr('width', xAxis.bandwidth())
-        .attr('height', d => heightMarginAdjusted - yAxis(d[this.yvar]))
+        .attr('height', row => heightMarginAdjusted - yAxis(row[this.yvar]))
         .attr('fill', this.barFill)
         
-      if (this.xAxisTitle !== null) {
-        svg.append('text')
-          .attr('x', (this.chartWidth / 2) + (this.chartMargins.left * -0.35))
-          .attr('y', this.chartHeight - (this.chartMargins.bottom / 4.5))
-          .attr('text-anchor', 'middle')
-          .style('font-size', '12pt')
-          .text(this.xlabel)
-      }
+      chartArea.selectAll('column-labels')
+        .data(this.chartData)
+        .enter()
+        .append('text')
+        .attr('data-column', row => row[this.xvar])
+        .attr('class', 'chart-column-labels')
+        .attr('x', row => xAxis(row[this.xvar]))
+        .attr('y', row => yAxis(row[this.yvar]))
+        .attr('dx', xAxis.bandwidth() / 2)
+        .attr('dy', '-3px')
+        .attr('text-anchor', 'middle')
+        .text(row => row[this.yvar])
+        .style('opacity', '0')
+        
+      chartColumns.style('cursor', 'pointer')
+        .on('mouseover', (event) => {
+          const column = d3.select(event.target)
+          const targetLabel = column.attr('data-column')
+          const label = d3.select(`text[data-column="${targetLabel}"]`)
+          column.attr('fill', this.barHoverFill)
+          label.style('opacity', '1')
+        })
+        .on('mouseout', (event) => {
+          const column = d3.select(event.target)
+          const targetLabel = column.attr('data-column')
+          const label = d3.select(`text[data-column="${targetLabel}"]`)
+          column.attr('fill', this.barFill)
+          label.style('opacity', '0')
+        })
       
-      if (this.yAxisTitle !== 'null') {
-        svg.append('text')
-          .attr('class', 'chart-text chart-axis-title chart-axis-y')
-          .attr('transform', 'rotate(-90)')
-          .attr('transform-origin', 'top left')
-          .attr('x', -(this.chartHeight / 2))
-          .attr('y', this.chartMargins.left / 3)
-          .attr('text-anchor', 'middle')
-          .style('font-size', '12pt')
-          .text(this.ylabel)
-      }
+      svg.append('text')
+        .attr('x', (this.chartWidth / 2) + (this.chartMargins.left * -0.35))
+        .attr('y', this.chartHeight - (this.chartMargins.bottom / 4.5))
+        .attr('text-anchor', 'middle')
+        .style('font-size', '12pt')
+        .text(this.xlabel)
+      
+      svg.append('text')
+        .attr('class', 'chart-text chart-axis-title chart-axis-y')
+        .attr('transform', 'rotate(-90)')
+        .attr('transform-origin', 'top left')
+        .attr('x', -(this.chartHeight / 2))
+        .attr('y', this.chartMargins.left / 3)
+        .attr('text-anchor', 'middle')
+        .style('font-size', '12pt')
+        .text(this.ylabel)
     }
   },
   mounted () {

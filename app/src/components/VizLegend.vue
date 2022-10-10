@@ -24,19 +24,25 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .legend {
   list-style: none;
   padding: 0;
   margin: 0;
   
-  .item-marker {
-    margin-right: 4px;
-  }
-  
-  .item-label {
-    line-height: 1.4;
-  }
+  .legend-item {
+    display: block;
+    
+    .item-marker {
+      display: inline-block;
+      margin-right: 4px;
+    }
+    
+    .item-label {
+      display: inline-block;
+      line-height: 1.4;
+    }
+}
   
 }
 </style>
