@@ -1,5 +1,5 @@
 <template>
-  <div class="d3-viz d3-geo-mercator">
+  <div class="d3-viz d3-geo-mercator" :style="waterColor ? `background-color: ${waterColor}` : ''">
     <svg :id="chartId"></svg>
     <div class="d3-viz-legend" v-if="legendLabels.length & legendColors.length">
       <chartLegend :labels="legendLabels" :colors="legendColors"/>
@@ -26,6 +26,9 @@ export default {
       type: Array,
       required: true
     },
+    fillVariable: {
+      type: String
+    },
     chartWidth: {
       type: Number,
       default: 500
@@ -51,27 +54,67 @@ export default {
     },
     legendColors: {
       type: Array
+    },
+    showTooltip: {
+      type: Boolean,
+      default: true
+    },
+    landColor: {
+      type: String,
+      default: '#4E5327'
+    },
+    borderColor: {
+      type: String,
+      default: '#757D3B'
+    },
+    waterColor: {
+      type: String,
+      default: '#6C85B5'
     }
   },
   components: { chartLegend },
+  data () {
+    return {
+      svg: null,
+      tooltip: null
+    }
+  },
   methods: {
-    renderChart () {
-      const svg = d3.select(`#${this.$el.childNodes[0].id}`)
+    initSvg () {
+      this.svg = d3.select(`#${this.$el.childNodes[0].id}`)
         .attr('width', this.chartWidth)
         .attr('height', this.chartHeight)
         .attr('preserveAspectRatio', 'xMinYMin')
         .attr('viewbox', `0 0 ${this.chartSize} ${this.chartSize / 2}`)
-        
-      const tooltip = d3.select('body')
+    },
+    removeTooltip () {
+      d3.selectAll(`#${this.chartId}-tooltip`).remove()
+    },
+    createTooltip () {
+      this.removeTooltip()
+      this.tooltip = d3.select('body')
         .style('position', 'relative')
         .append('div')
         .style('position', 'absolute')
         .attr('id', `${this.chartId}-tooltip`)
         .attr('class', 'map-chart-tooltip')
         .style('opacity', 0)
-      
-      const mapLayer = svg.append('g')
-        .attr('class', 'geojson-layer')
+    },
+    onMouseOver () {
+      this.tooltip.style('opacity', 1)
+    },
+    onMouseMove (event, data) {
+      this.tooltip.html(`<p class="title">${data.displayName}</p><p>${data.city}, ${data.country}</p>`)
+        .style('left', `${event.pageX + 8}px`)
+        .style('top', `${event.pageY - 55}px`)
+    },
+    onMouseLeave () {
+      this.tooltip.style('opacity', 0)
+    },
+    renderChart () {
+      this.initSvg()
+
+      const mapLayer = this.svg.append('g').attr('class', 'geojson-layer')
 
       const projection = d3.geoMercator()
         .center(this.chartCenterCoordinates)
@@ -84,14 +127,12 @@ export default {
         .data(this.geojson.features)
         .enter()
         .append('path')
-        .attr('fill', '#d6d6d6')
+        .attr('fill', this.landColor)
         .attr('d', path)
-        .attr('stroke', '#f6f6f6')
+        .attr('stroke', this.borderColor)
         
-      const dataLayer = svg.append('g')
-        .attr('class', 'data-layer')
-        
-      dataLayer.selectAll('circle')
+      const dataLayer = this.svg.append('g').attr('class', 'data-layer')
+      const points = dataLayer.selectAll('circle')
         .data(this.chartData)
         .enter()
         .append('circle')
@@ -99,17 +140,14 @@ export default {
         .attr('cx', row => projection([row.longitude, row.latitude])[0])
         .attr('cy', row => projection([row.longitude, row.latitude])[1])
         .attr('r', '5')
-        .attr('fill', row => row.hasSubmittedData ? '#3b3b3b' : '#94a6da')
-        .on('mouseover', () => tooltip.style('opacity', 1))
-        .on('mousemove', (event, row) => {
-          tooltip.html(`
-              <p class="title">${row.displayName}</p>
-              <p>${row.city}, ${row.country}</p>
-            `)
-            .style('left', `${event.pageX + 8}px`)
-            .style('top', `${event.pageY - 55}px`)
-        })
-        .on('mouseleave', () => tooltip.style('opacity', 0))
+        .attr('fill', row => { return row[this.fillVariable] })
+      
+      if (this.showTooltip) {
+        this.createTooltip()
+        points.on('mouseover', this.onMouseOver)
+          .on('mousemove', (event, row) => this.onMouseMove(event, row))
+          .on('mouseleave', this.onMouseLeave)
+      }
     }
   },
   mounted () {
@@ -130,9 +168,11 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #f6f6f6;
+    color: $gray-050;
+    border: 1px solid $gray-900;
+    background-color: $gray-900;
     padding: 12px;
-    box-shadow: 0 0 4px 2px hsla(0, 0%, 0%, 0.2)
+    box-shadow: 2px 4px 4px 2px hsla(0, 0%, 0%, 0.2)
   }
 }
 

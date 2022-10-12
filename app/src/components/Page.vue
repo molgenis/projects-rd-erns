@@ -26,7 +26,7 @@
         </ul>
       </div>
       <div class="footer-section molgenis-citation">
-        <p>This database was created using <a href="https://www.molgenis.org/">MOLGENIS open source  software</a> {{ molgenisVersion }} (released on {{ molgenisBuildDate }}).</p>
+        <p>This database was created using <a href="https://www.molgenis.org/">MOLGENIS open source software</a> v{{ molgenisVersion }} (released on {{ molgenisBuildDate }}).</p>
       </div>
     </footer>
   </div>

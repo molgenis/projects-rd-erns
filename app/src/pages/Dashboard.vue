@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard-container">
+  <Page id="dashboard-container">
     <LoadingScreen v-if="loading"/>
     <div class="error-message" v-else-if="!loading & loadingError">
       <p><strong>Unable to retrive data</strong></p>
@@ -37,12 +37,13 @@
             chartId="ern-institutions"
             :chartData="institutionGeoData"
             :geojson="geojson"
+            fillVariable="fillColor"
             :chartWidth="475"
-            :chartHeight="500"
+            :chartHeight="535"
             :chartSize="114"
             :chartCenterCoordinates="[6, 53]"
             :legendLabels="['Data Submitted', 'No Data']"
-            :legendColors="['#3b3b3b', '#94a6da']"
+            :legendColors="['#E9724C', '#f0f0f0']"
           />
       </DashboardSection>
       <DashboardSection id="viz-pie-chart">
@@ -69,7 +70,7 @@
           :chartHeight="250"
           :chartWidth="600"
           :chartMargins="{top: 10, right: 10, bottom: 60, left: 60}"
-          barFill="#355cb8"
+          barFill="#335598"
           barHoverFill="#45A5C8"
           xvar="label"
           yvar="value"
@@ -91,26 +92,26 @@
         />
       </DashboardSection>
     </Dashboard>
-  </div>
+  </Page>
 </template>
 
 <script>
+import Page from '../components/Page.vue'
 import LoadingScreen from '../components/LoadingScreen.vue'
 import Dashboard from '../components/Dashboard.vue'
 import DashboardSection from '../components/DashboardSection.vue'
-
 import DataHighlightBox from '../components/DataHighlightBox.vue'
 import DataHighlightContainer from '../components/DataHighlightContainer.vue'
 import DataTable from '../components/Datatable.vue'
 import PieChart from '../components/VizPieChart.vue'
 import BarChart from '../components/VizBarChart.vue'
 import GeoMercator from '../components/VizGeoMercator.vue'
-
 import geojson from '../assets/europe.custom.geojson'
 
 export default {
   name: 'ern-dashboard',
   components: {
+    Page,
     LoadingScreen,
     Dashboard,
     DashboardSection,
@@ -180,7 +181,11 @@ export default {
     ]).then(response => {
       const data = response[0].items
       const mapData = response[1].items
-      this.institutionGeoData = mapData
+      
+      this.institutionGeoData = mapData.map(row => ({
+        ...row, fillColor: row.hasSubmittedData ? '#E9724C' : '#f0f0f0'
+      }))
+      console.log(this.institutionGeoData)
 
       const patientEnrollment = this.subsetData(data, 'table-enrollment-patients')
       const countryEnrollment = this.subsetData(data, 'table-enrollment-country')
