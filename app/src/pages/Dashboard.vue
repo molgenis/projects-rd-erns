@@ -41,7 +41,7 @@
             :chartWidth="475"
             :chartHeight="535"
             :chartSize="114"
-            :chartCenterCoordinates="[6, 53]"
+            :chartCenterCoordinates="[-8, 53]"
             :legendLabels="['Data Submitted', 'No Data']"
             :legendColors="['#E9724C', '#f0f0f0']"
           />

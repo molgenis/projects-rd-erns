@@ -9,8 +9,8 @@
 
 <script>
 import chartLegend from './VizLegend.vue'
-import { select, selectAll, geoMercator, geoPath, json } from 'd3'
-const d3 = { select, selectAll, geoMercator, geoPath, json }
+import { select, selectAll, geoMercator, geoPath, json, zoom } from 'd3'
+const d3 = { select, selectAll, geoMercator, geoPath, json, zoom }
 
 export default {
   props: {
@@ -63,6 +63,10 @@ export default {
       type: Boolean,
       default: true
     },
+    enableZoom: {
+      type: Boolean,
+      default: true
+    },
     landColor: {
       type: String,
       default: '#4E5327'
@@ -80,13 +84,19 @@ export default {
   data () {
     return {
       svg: null,
-      tooltip: null
+      tooltip: null,
+      pointRadiusScaler: 1
+    }
+  },
+  computed: {
+    pointRadiusTransformed () {
+      return this.pointRadius / (this.pointRadiusScaler * 0.8)
     }
   },
   methods: {
     initSvg () {
       this.svg = d3.select(`#${this.$el.childNodes[0].id}`)
-        .attr('width', this.chartWidth)
+        .attr('width', '100%')
         .attr('height', this.chartHeight)
         .attr('preserveAspectRatio', 'xMinYMin')
         .attr('viewbox', `0 0 ${this.chartSize} ${this.chartSize / 2}`)
@@ -106,7 +116,7 @@ export default {
     },
     onMouseOver (event, data) {
       const pointName = data.displayName
-      d3.select(`circle[data-display-name="${pointName}"]`).attr('r', this.pointRadius * 1.75)
+      d3.select(`circle[data-display-name="${pointName}"]`).attr('r', this.pointRadiusTransformed)
       this.tooltip.style('opacity', 1)
     },
     onMouseMove (event, data) {
@@ -116,7 +126,7 @@ export default {
     },
     onMouseLeave (event, data) {
       const pointName = data.displayName
-      d3.select(`circle[data-display-name="${pointName}"]`).attr('r', this.pointRadius)
+      d3.select(`circle[data-display-name="${pointName}"]`).attr('r', this.pointRadiusTransformed)
       this.tooltip.style('opacity', 0)
     },
     renderChart () {
@@ -148,8 +158,6 @@ export default {
         .attr('cy', row => projection([row.longitude, row.latitude])[1])
         .attr('fill', row => { return row[this.fillVariable] })
         .attr('r', this.pointRadius)
-        .attr('stroke', '#3f454b')
-        .attr('stroke-width', '1px')
         .attr('data-display-name', row => row.displayName)
         .style('cursor', 'pointer')
       
@@ -158,6 +166,19 @@ export default {
         points.on('mouseover', (event, row) => this.onMouseOver(event, row))
           .on('mousemove', (event, row) => this.onMouseMove(event, row))
           .on('mouseleave', (event, row) => this.onMouseLeave(event, row))
+      }
+      
+      if (this.enableZoom) {
+        mapLayer.style('cursor', 'pointer')
+
+        const zoom = d3.zoom()
+          .on('zoom', (event) => {
+            this.pointRadiusScaler = event.transform.k
+            mapLayer.attr('transform', event.transform)
+            dataLayer.attr('transform', event.transform)
+            points.attr('r', this.pointRadiusTransformed)
+          })
+        this.svg.call(zoom)
       }
     }
   },
@@ -182,7 +203,7 @@ export default {
     font-size: 11pt;
     color: $gray-050;
     border: 1px solid $gray-900;
-    background-color: $gray-transparent-400;
+    background-color: $gray-transparent-700;
     padding: 12px;
     box-shadow: 2px 4px 4px 2px hsla(0, 0%, 0%, 0.2)
   }
