@@ -6,6 +6,8 @@ import Documents from '../pages/Documents.vue'
 import Dashboard from '../pages/Dashboard.vue'
 import PrivacyPolicy from '../pages/Privacy.vue'
 import MembersArea from '../pages/MembersArea.vue'
+import Disclaimer from '../pages/Disclaimer.vue'
+import Contact from '../pages/Contact.vue'
 
 const initialState = window.__INITIAL_STATE__ || {}
 
@@ -21,14 +23,9 @@ const routes = [
     component: About
   },
   {
-    name: 'governance',
-    path: '/governance',
-    component: Governance
-  },
-  {
-    name: 'documents',
-    path: '/documents',
-    component: Documents
+    name: 'contact',
+    path: '/contact',
+    component: Contact
   },
   {
     name: 'dashboard',
@@ -36,14 +33,29 @@ const routes = [
     component: Dashboard
   },
   {
-    name: 'privacy',
-    path: '/privacy',
-    component: PrivacyPolicy
+    name: 'disclaimer',
+    path: '/disclaimer',
+    component: Disclaimer
+  },
+  {
+    name: 'documents',
+    path: '/documents',
+    component: Documents
+  },
+  {
+    name: 'governance',
+    path: '/governance',
+    component: Governance
   },
   {
     name: 'members',
     path: '/members-area',
     component: MembersArea
+  },
+  {
+    name: 'privacy',
+    path: '/privacy',
+    component: PrivacyPolicy
   }
 ]
 
