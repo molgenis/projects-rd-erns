@@ -45,16 +45,8 @@ footer.footer {
     color: $gray-700;
     line-height: 1.5; 
 
-    strong {
-      color: $blue-900;
-    }
-    }
-    
-    address {
-      font-size: 14pt;
-      margin-left: 2.25em;
-      span {
-        display: block;
+      strong {
+        color: $blue-900;
       }
     }
   }
@@ -62,6 +54,12 @@ footer.footer {
 
 .genturis-logo {
   width: 325px;
+}
+
+.genturis-logo-crab {
+  display: block;
+  margin: 0 auto;
+  width: 100px;
 }
 
 .molgenis_logo {
