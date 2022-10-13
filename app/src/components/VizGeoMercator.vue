@@ -49,6 +49,10 @@ export default {
       type: Number,
       default: 1.1
     },
+    pointRadius: {
+      type: Number,
+      default: 6
+    },
     legendLabels: {
       type: Array
     },
@@ -100,7 +104,9 @@ export default {
         .attr('class', 'map-chart-tooltip')
         .style('opacity', 0)
     },
-    onMouseOver () {
+    onMouseOver (event, data) {
+      const pointName = data.displayName
+      d3.select(`circle[data-display-name="${pointName}"]`).attr('r', this.pointRadius * 1.75)
       this.tooltip.style('opacity', 1)
     },
     onMouseMove (event, data) {
@@ -108,7 +114,9 @@ export default {
         .style('left', `${event.pageX + 8}px`)
         .style('top', `${event.pageY - 55}px`)
     },
-    onMouseLeave () {
+    onMouseLeave (event, data) {
+      const pointName = data.displayName
+      d3.select(`circle[data-display-name="${pointName}"]`).attr('r', this.pointRadius)
       this.tooltip.style('opacity', 0)
     },
     renderChart () {
@@ -136,17 +144,20 @@ export default {
         .data(this.chartData)
         .enter()
         .append('circle')
-        .style('cursor', 'pointer')
         .attr('cx', row => projection([row.longitude, row.latitude])[0])
         .attr('cy', row => projection([row.longitude, row.latitude])[1])
-        .attr('r', '5')
         .attr('fill', row => { return row[this.fillVariable] })
+        .attr('r', this.pointRadius)
+        .attr('stroke', '#3f454b')
+        .attr('stroke-width', '1px')
+        .attr('data-display-name', row => row.displayName)
+        .style('cursor', 'pointer')
       
       if (this.showTooltip) {
         this.createTooltip()
-        points.on('mouseover', this.onMouseOver)
+        points.on('mouseover', (event, row) => this.onMouseOver(event, row))
           .on('mousemove', (event, row) => this.onMouseMove(event, row))
-          .on('mouseleave', this.onMouseLeave)
+          .on('mouseleave', (event, row) => this.onMouseLeave(event, row))
       }
     }
   },
@@ -168,9 +179,10 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
+    font-size: 11pt;
     color: $gray-050;
     border: 1px solid $gray-900;
-    background-color: $gray-900;
+    background-color: $gray-transparent-400;
     padding: 12px;
     box-shadow: 2px 4px 4px 2px hsla(0, 0%, 0%, 0.2)
   }

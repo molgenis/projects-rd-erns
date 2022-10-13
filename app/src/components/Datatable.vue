@@ -119,6 +119,7 @@ $text-default: #3f454b;
     thead {
       tr {
         th {
+          font-size: 11pt;
           font-weight: 600;
           padding: 4px 12px;
           text-transform: uppercase;
@@ -143,6 +144,7 @@ $text-default: #3f454b;
     tbody {
       tr {
         td {
+          font-size: 13pt;
           padding: 16px 12px;
           
           &.value-number {

@@ -31,7 +31,7 @@
         aria-labelledBy="viz-map-title"
       >
         <h2 id="viz-map-title" class="chart-title">
-          Status of data submitted by Healthcare Providers
+          Status of Data Submitted by Healthcare Providers
         </h2>
           <GeoMercator
             chartId="ern-institutions"
@@ -47,9 +47,7 @@
           />
       </DashboardSection>
       <DashboardSection id="viz-pie-chart">
-        <h2 id="sex-at-birth-title" class="chart-title">
-          {{ sexAtBirth.title }}
-        </h2>
+        <h2 id="sex-at-birth-title" class="chart-title centered">Sex at Birth</h2>
         <PieChart
           chartId="sex-at-birth-chart"
           :chartData="sexAtBirth.data"
@@ -61,8 +59,8 @@
         />
       </DashboardSection>
       <DashboardSection id="viz-age-bar-chart">
-        <h2 id="age-at-inclusion-title" class="chart-title">
-          {{ ageAtInclusion.title }}
+        <h2 id="age-at-inclusion-title" class="chart-title centered">
+          Age of Patients at Time of Inclusion
         </h2>
         <BarChart
           chartId="age-at-inclusion-chart"
@@ -80,15 +78,14 @@
         />
       </DashboardSection>
       <DashboardSection id="viz-table-disease-enrollment">
-        <h2 id="patient-enrollment-summary-title" class="visually-hidden">
-          Summary of patients enrolled by thematic disease group
+        <h2 id="patient-enrollment-summary-title" class="chart-title">
+          Summary of Patients Enrolled by Thematic Disease Group
         </h2>
         <DataTable
           tableId="disease-group-enrollment-table"
           class="ern-table-dataset"
           :data="diseaseGroupEnrollment.data"
           :columnOrder='["Thematic Disease Groups", "Number of Patients"]'
-          :caption="diseaseGroupEnrollment.title"
         />
       </DashboardSection>
     </Dashboard>
@@ -225,8 +222,12 @@ export default {
   font-weight: bold;
   line-height: 1.4;
   letter-spacing: 0.03em;
-  text-align: center;
-  color: #252525;
+  color: $gray-900;
+  margin: 12px 0;
+  
+  &.centered {
+    text-align: center;
+  }
 }
 
 .ern-table-summary {
