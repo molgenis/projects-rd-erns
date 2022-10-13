@@ -35,8 +35,16 @@ $blue-900: #163D89;
 $red-900: hsl(10, 90%, 55%);
 $red-050: hsl(1, 100%, 95%);
 
-$black-transparent-100: hsla(0, 0%, 0%, 0.50);
-$black-transparent-050: hsla(0, 0%, 0%, 0.10);
+$gray-transparent-900: hsla(0, 0%, 0%, 0.90);
+$gray-transparent-800: hsla(0, 0%, 0%, 0.80);
+$gray-transparent-700: hsla(0, 0%, 0%, 0.70);
+$gray-transparent-600: hsla(0, 0%, 0%, 0.60);
+$gray-transparent-500: hsla(0, 0%, 0%, 0.50);
+$gray-transparent-400: hsla(0, 0%, 0%, 0.40);
+$gray-transparent-300: hsla(0, 0%, 0%, 0.30);
+$gray-transparent-200: hsla(0, 0%, 0%, 0.20);
+$gray-transparent-100: hsla(0, 0%, 0%, 0.10);
+$gray-transparent-050: hsla(0, 0%, 0%, 0.05);
 
 $body-text: $gray-700;
 $body-heading: $gray-900;
@@ -48,8 +56,8 @@ $body-heading-light-050: hsl(216, 11%, 98%);
 $error-primary: $red-900;
 $error-light: $red-050;
 
-$box-shadow: 0 0 4px 3px $black-transparent-050;
-$box-shadow-alt: 0 0 5px 3px $black-transparent-100;
+$box-shadow: 0 0 4px 3px $gray-transparent-050;
+$box-shadow-alt: 0 0 5px 3px $gray-transparent-100;
 $box-shadow-inset: inset 0 2px 4px 0 $gray-100;
 
 // $primary: $gray-900-alt;
