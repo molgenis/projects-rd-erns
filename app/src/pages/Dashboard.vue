@@ -182,7 +182,6 @@ export default {
       this.institutionGeoData = mapData.map(row => ({
         ...row, fillColor: row.hasSubmittedData ? '#E9724C' : '#f0f0f0'
       }))
-      console.log(this.institutionGeoData)
 
       const patientEnrollment = this.subsetData(data, 'table-enrollment-patients')
       const countryEnrollment = this.subsetData(data, 'table-enrollment-country')

@@ -10,6 +10,11 @@
       id="genturis-section-welcome"
       aria-labelledby="genturis-section-welcome-title"
     >
+      <img
+        :src="require('@/assets/genturis-logo-crab.jpg')"
+        class="genturis-logo-crab"
+        alt="genturis registry"
+      />
       <h2 id="genturis-section-welcome-title">
         Welcome to the GENTURIS registry
       </h2>
@@ -52,32 +57,10 @@
         <li>To accelerate the generation of <strong>new knowledge</strong> on genturis through collaborative research.</li>
       </ul>
     </Section>
-    <Section
-      id="genturis-section-contact"
-      aria-labelledby="genturis-section-contact-title"
-    >
-      <h2 id="genturis-section-contact-title">
-        Contact
-      </h2>
-      <p>For further information please contact the GENTURIS registry coordination team via:</p>
-      <address>
-        <span>Radboud University Medical Center</span>
-        <span>GENTURIS Registry</span>
-        <span>Department of Human Genetics</span>
-        <span>Geert Grooteplein zuid 10</span>
-        <span>6525 GA Nijmegen</span>
-        <span>The Netherlands</span>
-        <a href="mailto:genturis-registry@radboudumc.nl">genturis-registry@radboudumc.nl</a>
-      </address>
-    </Section>
-    <Section
-      id="genturis-section-disclaimer"
-      aria-labelledby="genturis-section-disclaimer-title"
-    >
-      <h2 id="genturis-section-disclaimer-title">
-        Disclaimer
-      </h2>
-      <p>The GENTURIS registry was funded by the European Union’s Health Programme (2014-2020). The content of this website represents the views of the GENTURIS registry only and is it sole responsibility; it cannot be considered to reflect the views of the European Commission and/or the Consumers, Health, Agriculture and Food Executive Agency (CHAFEA) or any other body of the European Union. The European Commission and the Agency do not accept any responsibility for use that may be made of the information it contains.</p>
+    <Section id="genturis-section-contact" aria-labelledby="genturis-section-contact-title">
+      <h2 id="genturis-section-contact-title">Contact</h2>
+      <p>For further information, please contact the GENTURIS registry coordination team by email <a href="mailto:genturis-registry@radboudumc.nl">genturis-registry@radboudumc.nl</a> or at the following address.</p>
+      <Address :centerText="true" />
     </Section>
   </Page>
 </template>
@@ -87,6 +70,7 @@ import Page from '../components/Page.vue'
 import Header from '../components/Header.vue'
 import Section from '../components/Section.vue'
 import RouterLinkCard from '../components/RouterLinkCard.vue'
+import Address from '../components/Address.vue'
 
 export default {
   name: 'home-page',
@@ -94,12 +78,23 @@ export default {
     Page,
     Header,
     Section,
-    RouterLinkCard
+    RouterLinkCard,
+    Address
   }
 }
 </script>
 
 <style lang="scss">
+
+#genturis-header {
+  justify-content: center;
+  align-items: flex-end;
+  
+  .header-content {
+    text-align: center;
+  }
+}
+
 #genturis-section-welcome,
 #genturis-section-contact {
   background-color: $gray-000;
@@ -121,7 +116,7 @@ export default {
 }
 
 #quicklinks-about {
-  background-color: $blue-800;
+  background-color: $blue-900;
 }
 
 #quicklink-documents {

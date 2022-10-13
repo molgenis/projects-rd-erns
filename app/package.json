@@ -1,6 +1,6 @@
 {
-  "name": "molgenis-app-ern-dashboard",
-  "description": "Vue and D3 dashbaord for ERN databases",
+  "name": "genturis-registry",
+  "description": "Custom App for the ERN Genturis Registry",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
