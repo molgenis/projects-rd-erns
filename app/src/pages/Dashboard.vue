@@ -41,7 +41,7 @@
             :chartWidth="475"
             :chartHeight="535"
             :chartSize="114"
-            :chartCenterCoordinates="[-8, 53]"
+            :chartCenterCoordinates="[-3, 53]"
             :legendLabels="['Data Submitted', 'No Data']"
             :legendColors="['#E9724C', '#f0f0f0']"
           />
@@ -103,7 +103,8 @@ import DataTable from '../components/Datatable.vue'
 import PieChart from '../components/VizPieChart.vue'
 import BarChart from '../components/VizBarChart.vue'
 import GeoMercator from '../components/VizGeoMercator.vue'
-import geojson from '../assets/europe.custom.geojson'
+// import geojson from '../assets/europe.custom.geojson'
+import geojson from '../assets/world.geojson'
 
 export default {
   name: 'ern-dashboard',
