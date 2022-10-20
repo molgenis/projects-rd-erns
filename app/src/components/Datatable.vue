@@ -63,6 +63,7 @@ export default {
         .data(this.columnOrder)
         .enter()
         .append('th')
+        .attr('data-column-index', (column, index) => index)
         .attr('data-column-name', column => column)
         .text(column => column)
 
@@ -109,8 +110,8 @@ $text-default: #3f454b;
     
     caption {
       caption-side: top;
-      font-size: 14pt;
-      margin: 12px 0;
+      font-size: 13pt;
+      margin-bottom: 12px;
       font-weight: 600;
       color: $text-dark;
     }
@@ -118,6 +119,7 @@ $text-default: #3f454b;
     thead {
       tr {
         th {
+          font-size: 11pt;
           font-weight: 600;
           padding: 4px 12px;
           text-transform: uppercase;
@@ -128,7 +130,7 @@ $text-default: #3f454b;
       }
       
       &.visually-hidden-header {
-         position: absolute;
+        position: absolute;
         clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
         clip: rect(1px, 1px, 1px, 1px);
         overflow: hidden;
@@ -142,6 +144,7 @@ $text-default: #3f454b;
     tbody {
       tr {
         td {
+          font-size: 13pt;
           padding: 16px 12px;
           
           &.value-number {
