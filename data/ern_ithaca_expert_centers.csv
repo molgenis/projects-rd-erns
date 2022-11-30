@@ -1,0 +1,74 @@
+name,displayName,country,representative,status,latitude,longitude,hasSubmittedData,city,code,codesystem,iri,projectName,href
+Innsbruck Medical University,Innsbruck Center,Austria,Dr Christine Fauth,Affiliated partner,47.26266,11.39454,,Innsbruck,03pt86f80,ROR,https://ror.org/03pt86f80,Innsbruck Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-innsbruck-center/
+Antwerp University Hospital,Antwerpen Center,Belgium,Dr Marije Meuwissen,Full member,51.22047,4.40026,,Antwerp,01hwamj44,ROR,https://ror.org/01hwamj44,Antwerpen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-antwerpen-center/
+Erasmus Hospital,Brussels Center (Erasme),Belgium,Pr Catheline VILAIN,Full member,50.813611,4.266111,,Brussels,05j1gs298,ROR,https://ror.org/05j1gs298,Brussels Center (Erasme),https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-brussels-center-erasme/
+Ghent University,Ghent Center,Belgium,Pr Dr Bert Callewaert,Full member,51.05,3.71667,,Ghent,00cv9y106,ROR,https://ror.org/00cv9y106,Ghent Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-ghent-center/
+,HCP Brussels (Saint Luc) + Gosselies (consortium),Belgium,Pr Dr Yves Sznajer,Full member,,,,,,ROR,,HCP Brussels (Saint Luc) + Gosselies (consortium),https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-hcp-brussels-saint-luc-gosselies-consortium/
+,University Hospital Leuven,Belgium,Pr Hilde Van Esch,Full member,,,,,,ROR,,University Hospital Leuven,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-university-hospital-leuven/
+,Zagreb Center,Croatia,Dr Mijana Kero,Full member,,,,,,ROR,,Zagreb Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-zagreb-center/
+,Cyprus Center,Cyprus,Dr George Tanteles,Full member,,,,,,ROR,,Cyprus Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-cyprus-center/
+,Prague Center,Czech Republic,Pr Dr Milan Macek,Full member,,,,,,ROR,,Prague Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-prague-center/
+,Aarhus Center,Denmark,Dr Mette Møller Handrup,Full member,,,,,,ROR,,Aarhus Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-aarhus-center/
+,Copenhagen Center,Denmark,Dr Elsebet 0estergaard,Full member,,,,,,ROR,,Copenhagen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-copenhagen-center/
+,Odense Center,Denmark,Pr Dr Lilian Bomme Ousager,Full member,,,,,,ROR,,Odense Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-odense-center/
+,Tartu Center,Estonia,Dr Kai Muru,Full member,,,,,,ROR,,Tartu Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-tartu-center/
+,Helsinki Center,Finland,Dr Kristiina Avela,Full member,,,,,,ROR,,Helsinki Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-helsinki-center/
+,Oulu Center,Finland,Dr Outi Kuismin,Full member,,,,,,ROR,,Oulu Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-oulu-center/
+,Bordeaux Center,France,Pr Didier Lacombe,Full member,,,,,,ROR,,Bordeaux Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-bordeaux-center/
+,Dijon Center,France,Pr Laurence Faivre,Full member,,,,,,ROR,,Dijon Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-dijon-center/
+,Lille Center,France,Pr Florence Petit,Full member,,,,,,ROR,,Lille Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-lille-center/
+,Lyon Center,France,Dr Massimiliano ROSSI,Full member,,,,,,ROR,,Lyon Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-lyon-center/
+,Marseille Center,France,Dr Sabine Sigaudy,Full member,,,,,,ROR,,Marseille Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-marseille-center/
+,Montpellier Center,France,Pr David Genevieve,Full member,,,,,,ROR,,Montpellier Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-montpellier-center/
+,Paris Center (Robert Debré University Hospital),France,Pr Alain Verloes,Full member,,,,,,ROR,,Paris Center (Robert Debré University Hospital),https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-paris-center-robert-debre-university-hospital/
+,Rennes Center,France,Pr Sylvie Odent,Full member,,,,,,ROR,,Rennes Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-rennes-center/
+,Düsseldorf Center,Germany,Pr Dagmar Wieczorek,Full member,,,,,,ROR,,Düsseldorf Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-dusseldorf-center/
+,Erlangen Center,Germany,Pr Dr André Reis,Full member,,,,,,ROR,,Erlangen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-erlangen-center/
+,Essen Center,Germany,Pr Dr Franck Kaiser,Full member,,,,,,ROR,,Essen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-essen-center/
+,Göttingen Center,Germany,Dr Bernd Wollnik,Full member,,,,,,ROR,,Göttingen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-gottingen-center/
+,Hambourg Center,Germany,Dr Maja Hempel,Full member,,,,,,ROR,,Hambourg Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-hamburg-center/
+,Lübeck Center,Germany,Dr Irina Huening,Full member,,,,,,ROR,,Lübeck Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-lubeck-center/
+,Magdeburg Center,Germany,Prof. Dr. med. Martin Zenker,Full member,,,,,,ROR,,Magdeburg Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-magdebourg-center/
+,Munster Center,Germany,Pr Axel Bohring,Full member,,,,,,ROR,,Munster Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-munster-center/
+,Tübingen Center,Germany,Dr Andreas Dufke,Full member,,,,,,ROR,,Tübingen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-tubingen-center/
+,Debrecen Center,Hungary,Dr Katalin Szakszon,Full member,,,,,,ROR,,Debrecen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-debrecen-center/
+,Pècs Centre,Hungary,Kinga Hadzsiev,Full member,,,,,,ROR,,Pècs Centre,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-pecs-center/
+,Dublin Center,Ireland,Dr Sally Lynch,Full member,,,,,,ROR,,Dublin Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-dublin-center/
+,Bologna Center,Italy,Pr Laura Mazzanti,Full member,,,,,,ROR,,Bologna Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-bologna-center/
+,Ferrara Center,Italy,Dr Alessandra Ferlini,Full member,,,,,,ROR,,Ferrara Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-ferrara-center/
+,Florence Center,Italy,Pr Renzo Guerrini,Full member,,,,,,ROR,,Florence Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-florence-center/
+,Fondazione IRCCS Istituto Neurologico Carlo Besta di Milano,Italy,Dr Stefano D'Arrigo,Full member,,,,,,ROR,,Fondazione IRCCS Istituto Neurologico Carlo Besta di Milano,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-fondazione-irccs-istituto-neurologico-carlo-besta-di-milano/
+,Genoa Center,Italy,Dr Valeria Capra,Full member,,,,,,ROR,,Genoa Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-genoa-center/
+,Milan Center (Fondazione IRCCS Ca’ Granda),Italy,Dr Maria Francesca Bedeschi,Full member,,,,,,ROR,,Milan Center (Fondazione IRCCS Ca’ Granda),https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-milan-center/
+,Naples Center,Italy,Dr. Prof. Nicola Brunetti-Pierri,Full member,,,,,,ROR,,Naples Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-naples-center/
+,Padua Center,Italy,Pr Dr Leonardo Salviati,Full member,,,,,,ROR,,Padua Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-padua-center/
+,Reggio Emilia Center,Italy,Dr Livia Garavelli,Full member,,,,,,ROR,,Reggio Emilia Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-reggio-emilia-center/
+,Rome (Gemelli) Center,Italy,Pr Guiseppe Zampino,Full member,,,,,,ROR,,Rome (Gemelli) Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-rome-gemelli-center/
+,Rome (OPBG) Center,Italy,Pr Andrea Bartuli,Full member,,,,,,ROR,,Rome (OPBG) Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-rome-opbg-center/
+,Siena Center,Italy,Pr Dr Alessandra Renieri,Full member,,,,,,ROR,,Siena Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-siena-center/
+,Torino Center,Italy,Pr Dr Giovanni Battista Ferrero,Full member,,,,,,ROR,,Torino Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-torino-center/
+,Riga Center,Latvia,Dr Ieva Malniece,Full member,,,,,,ROR,,Riga Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-riga-center/
+,Vilnius Center,Lithuania,Dr Aušra Matulevičienė,Full member,,,,,,ROR,,Vilnius Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-vilnius-center/
+,Luxemburg Hub,Luxemburg,,Hub,,,,,,ROR,,Luxemburg Hub,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-luxemburg-hub/
+,Malta Hub,Malta,,Hub,,,,,,ROR,,Malta Hub,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-malta-hub/
+,Amsterdam Center,Netherlands,Dr Leonie A. Menke,Full member,,,,,,ROR,,Amsterdam Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-amsterdam-center/
+,Groningen Center,Netherlands,Pr Conny van Ravenswaaij-Arts,Full member,,,,,,ROR,,Groningen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-groningen-center/
+,Leiden Center,Netherlands,Dr Gijs Santen,Full member,,,,,,ROR,,Leiden Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-leiden-center/
+,Maastricht Center,Netherlands,Dr Margje Sinnema,Full member,,,,,,ROR,,Maastricht Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-maastricht-center/
+,Nijmegen Center,Netherlands,Pr Dr Tjitske Kleefstra,Full member,,,,,,ROR,,Nijmegen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-nijmegen-center/
+,Rotterdam Center,Netherlands,Dr Yvette van Ierland,Full member,,,,,,ROR,,Rotterdam Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-rotterdam-center/
+,Bergen Center,Norway,Dr Sofia Douzgou Houge,Full member,,,,,,ROR,,Bergen Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-bergen-center/
+,Gdansk Center,Poland,Dr Beata Lipska,Full member,,,,,,ROR,,Gdansk Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-gdansk-center/
+,Olsztyn Center,Poland,Dr Malgorzata Pawlowicz,Full member,,,,,,ROR,,Olsztyn Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-olsztyn-center/
+,Warszawa Center,Poland,Pr Dr Krystyna Chrzanowska,Full member,,,,,,ROR,,Warszawa Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-warzawa-center/
+,Coimbra Center,Portugal,Dr Lina Ramos,Full member,,,,,,ROR,,Coimbra Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-coimbra-center/
+,Lisboa Center,Portugal,Dr Patricia Dias,Full member,,,,,,ROR,,Lisboa Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-lisboa-center/
+,Timisoara Center (Ro-NMCA-ID),Romania,Pr Dr Puiu Maria,Full member,,,,,,ROR,,Timisoara Center (Ro-NMCA-ID),https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-timisoara-center-ro-nmca-id/
+,Bratislava Center,Slovakia,Dr Frantisek Horn,Full member,,,,,,ROR,,Bratislava Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-bratislava-center/
+,Ljubijana Center,Slovenia,Dr Luca Lovrecic,Hub,,,,,,ROR,,Ljubijana Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-ljubijana-center/
+,Barcelona San Joan de Déu Center,Spain,Pr Dr Francesc Palau,Full member,,,,,,ROR,,Barcelona San Joan de Déu Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-barcelona-san-joan-center/
+,Barcelona Val d’Hebron Center,Spain,Dr Eduardo Tizzano Ferrari,Full member,,,,,,ROR,,Barcelona Val d’Hebron Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-barcelona-center-val-dhebron/
+,Madrid 12 de Octubre Center,Spain,Dr Noemí Nuñez Enamorado,Affiliated partner,,,,,,ROR,,Madrid 12 de Octubre Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-12-de-octubre-center/
+,Madrid Gregorio Maranon Center,Spain,Dr Jose Luis Escalante,Affiliated partner,,,,,,ROR,,Madrid Gregorio Maranon Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-madrid-gregorio-maranon-center/
+,Madrid La Paz Center,Spain,Dr Pablo Lapunzina,Full member,,,,,,ROR,,Madrid La Paz Center,https://ern-ithaca.eu/about-us/expert-centers/ern-ithaca-madrid-center/
+,Stockholm Center,Sweden,Pr Dr Ann Nordgren,Full member,,,,,,ROR,,Stockholm Center,https://ern-ithaca.eu/about-us/expert-centers/770/
