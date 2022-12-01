@@ -64,6 +64,7 @@ data['representative'] = dt.Frame([
 ])
 
 data[[
+  'name',
   'latitude',
   'longitude',
   'hasSubmittedData',
@@ -74,13 +75,13 @@ data[[
   'projectName'
 ]] = None
 
-
 # save data
 data.to_pandas() \
   .to_csv(
     'data/ern_ithaca_expert_centers.csv',
     index=False,
-    quoting=csv.QUOTE_ALL
+    quoting=csv.QUOTE_ALL,
+    encoding="utf-16"
   )
 
 driver.close()
