@@ -2,7 +2,7 @@
 # NAME: ern_genturis.yaml
 # AUTHOR: David Ruvolo
 # CREATED: 2022-06-16
-# MODIFIED: 2022-06-16
+# MODIFIED: 2022-12-01
 # PURPOSE: yamlemx profile for ern-genturis
 # DEPENDENCIES: NA
 # COMMENTS: NA
@@ -27,7 +27,7 @@ modelFilePath: [model/ernstats.yaml]
 buildOptions: 
   emx1:
     active: true
-    generateSchema: true
+    generateSchema: false
     outputDir: dist
     schemasDir: schemas
     overrideLabels: false
@@ -36,7 +36,7 @@ buildOptions:
   emx2:
     active: false
     splitLookups: true
-    generateSchema: true
+    generateSchema: false
     outputDir: dist
     schemasDir: schemas
     overrideLabels: false
