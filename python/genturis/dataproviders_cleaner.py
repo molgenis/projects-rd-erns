@@ -10,7 +10,7 @@
 #'////////////////////////////////////////////////////////////////////////////
 
 import pandas as pd
-from python.api.ror import RorClient
+from python.utils.ror import RorClient
 import csv
 
 ror = RorClient()
