@@ -25,39 +25,55 @@ entities:
     label: Data Providers
     description: All affiliated data providers (intitutions, hospitals, etc.)
     attributes:
-      - name: iri
-        dataType: hyperlink
-        description: A unique symbol that establishes identity of the resource.
-        tags: NCIT_C165071 http://purl.obolibrary.org/obo/NCIT_C165071
+      
+      - name: id
+        description: identifier of the institution from ROR
+        tags: NCIT_C25162 http://purl.obolibrary.org/obo/NCIT_C25162
         idAttribute: true
         labelAttribute: true
         lookupAttribute: true
         nillable: false
         unique: true
-
-      - name: codesystem
-        description: A systematized collection of concepts that define corresponding codes.
-        tags: NCIT_C70895 http://purl.obolibrary.org/obo/NCIT_C70895
-        
-      - name: code
-        description: A symbol or combination of symbols which is assigned to the members of a collection.
-        tags: NCIT_C25162 http://purl.obolibrary.org/obo/NCIT_C25162
+    
+      - name: databaseID
+        description: The identifier of the emx package for this organisation
         
       - name: projectName
         description: Original institution name as defined by the project
         dataType: string
-        
-      - name: centerType
-        dataType: string
-
-      - name: centerRepresentative
-        dataType: string
-        tags: NCIT_C51875 http://purl.obolibrary.org/obo/NCIT_C51875
 
       - name: hasSubmittedData
         description: An indication that a file has been submitted to a data repository.
         dataType: bool
         tags: NCIT_C172872 http://purl.obolibrary.org/obo/NCIT_C172872
+        
+      - name: organisationInfo
+        dataType: compound
+        
+      - name: centerType
+        dataType: string
+        partOfAttribute: organisationInfo
+
+      - name: centerRepresentative
+        dataType: string
+        partOfAttribute: organisationInfo
+        tags: NCIT_C51875 http://purl.obolibrary.org/obo/NCIT_C51875
+        
+      - name: iri
+        dataType: hyperlink
+        description: A unique symbol that establishes identity of the resource.
+        tags: NCIT_C165071 http://purl.obolibrary.org/obo/NCIT_C165071
+        partOfAttribute: organisationInfo
+
+      - name: codesystem
+        description: A systematized collection of concepts that define corresponding codes.
+        tags: NCIT_C70895 http://purl.obolibrary.org/obo/NCIT_C70895
+        partOfAttribute: organisationInfo
+      
+      - name: code
+        description: identifier of the institution from ROR
+        tags: NCIT_C25162 http://purl.obolibrary.org/obo/NCIT_C25162
+        partOfAttribute: organisationInfo
         
       - name: additionalInformation
         dataType: compound
