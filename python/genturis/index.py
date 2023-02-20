@@ -25,13 +25,24 @@ genturisACC.login(environ['GENTURIS_ACC_USR'], environ['GENTURIS_ACC_PWD'])
 # ~ 0 ~
 # Import data providers xlsx
 
-dataproviders = dt.Frame(pd.read_excel('data/ern_genturis_dataproviders.xlsx'))
+# dataproviders = dt.Frame(pd.read_excel('data/ern_genturis_dataproviders.xlsx'))
+# genturisPROD.delete('ernstats_dataproviders')
+# genturisACC.delete('ernstats_dataproviders')
+# genturisPROD.importDatatableAsCsv('ernstats_dataproviders', dataproviders)
+# genturisACC.importDatatableAsCsv('ernstats_dataproviders', dataproviders)
 
-genturisPROD.delete('ernstats_dataproviders')
-genturisACC.delete('ernstats_dataproviders')
 
-genturisPROD.importDatatableAsCsv('ernstats_dataproviders', dataproviders)
-genturisACC.importDatatableAsCsv('ernstats_dataproviders', dataproviders)
+# move dataproviders dataset between servers
+providers = dt.Frame(genturisPROD.get('ernstats_dataproviders'))
+del providers['_href']
 
-genturisPROD.logout()
-genturisACC.logout()
+genturisACC.importDatatableAsCsv('ernstats_dataproviders',providers)
+
+# move stats dataset between servers
+stats = dt.Frame(genturisPROD.get('ernstats_stats'))
+del stats['_href']
+# genturisACC.delete('ernstats_stats')
+genturisACC.importDatatableAsCsv('ernstats_stats', stats)
+
+# genturisPROD.logout()
+# genturisACC.logout()
