@@ -12,17 +12,28 @@
 from python.utils.molgenis2 import Molgenis
 from datatable import dt, f, as_type
 from dotenv import load_dotenv
+from datetime import datetime
 from os import environ
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
 import functools
 import operator
+import pytz
 import re
 load_dotenv()
 
 genturis=Molgenis(environ['GENTURIS_PROD_HOST'])
 genturis.login(environ['GENTURIS_PROD_USR'], environ['GENTURIS_PROD_PWD'])
+
+# genturis=Molgenis(environ['GENTURIS_ACC_HOST'])
+# genturis.login(environ['GENTURIS_ACC_USR'], environ['GENTURIS_ACC_PWD'])
+
+def print2(*args):
+  message = ' '.join(map(str, args))
+  time = datetime.now(tz=pytz.timezone('Europe/Amsterdam')).strftime('%H:%M:%S.%f')[:-3]
+  print(f'[{time}] {message}')
+
 
 def flattenDataset(data, columnPatterns=None):
   """Flatten Dataset
@@ -61,11 +72,38 @@ def flattenDataset(data, columnPatterns=None):
           row[column] = None
   return newData
   
+def findDateLastContact(data):
+  """Find data of last contact
+  @return date string or None
+  """
+  if bool(data.get('YearDeath')):
+    return data['YearDeath']
+  else:
+    if bool(data.get('DateLastInfo')):
+      return data['DateLastInfo']
+    elif bool(data.get('YearFollowup')):
+      return data['YearFollowup']
+    else:
+      return None
+      
+def yearToDate(value, format="-07-01"):
+  """Year to date
+  If a value is only a year, reformat it as a yyyy-mm-dd.
+  
+  @param value a string containing a year
+  @param format date format to append to the year (default `-07-01`)
+  
+  @return a date string in yyyy-mm-dd format
+  """
+  return f"{value}{format}"
+  
 #///////////////////////////////////////////////////////////////////////////////
 
 # ~ 1 ~
 # Retrieve data
 # In order to summarise the data for the dashboard, Collate all available EMX Packages
+
+print2('Create a list of available EMX packages....')
 
 # retrieve system meta
 packages = dt.Frame(genturis.get(
@@ -76,13 +114,54 @@ packages = dt.Frame(genturis.get(
 del packages['_href']
 
 # retrieve data from stats table
+print2('Retrieving reference datasets....')
+inclusionCriteria = dt.Frame(genturis.get('genturis_InclCriteria'))
+inclusionCriteriaUnexplained = dt.Frame(genturis.get('genturis_InclCriteriaUnexplain'))
+variantClassification = dt.Frame(genturis.get('genturis_variantClass'))
+sexCodes = dt.Frame(genturis.get('genturis_sex'))
+
+del inclusionCriteria['_href']
+del inclusionCriteriaUnexplained['_href']
+del variantClassification['_href']
+del sexCodes['_href']
+
+# retrieve inclusion criteria
+print2('Retrieving current stats data...')
 ernstats = dt.Frame(genturis.get(entity = 'ernstats_stats'))
 del ernstats['_href']
+
+print2('Retrieving inclusion criteria....')
+diseaseGroupCriteria = dt.Frame(genturis.get('ernstats_inclusionCriteria'))
+del diseaseGroupCriteria['_href']
+
+diseaseGroups = diseaseGroupCriteria[
+  :, dt.first(f[:]), dt.by(f.groupID,f.groupName)
+][:, (f.groupID, f.groupName)]
+
+# print2('Reshaping inclusion criteria dataset....')
+# diseaseGroupGenes = {}
+# diseaseGroupOrdo = {}
+# for group in dt.unique(diseaseGroupCriteria[f.type=='GENE','groupID']).to_list()[0]:
+#   # isolate group *n* genes
+#   diseaseGroupGenes[group] = diseaseGroupCriteria[
+#     (f.type=='GENE') & (f.groupID==group),
+#     'value'
+#   ].to_list()[0]
+  
+#   # isolate group *n* ORDO codes
+#   diseaseGroupOrdo[group] = diseaseGroupCriteria[
+#     (f.type=='ORDO') & (f.groupID==group),
+#     'value'
+#   ].to_list()[0]
+
+#///////////////////////////////////////
 
 # ~ 1a ~
 # Refresh Database IDs
 # It is recommended to refresh the values in the databaseIDs. This allows us to
 # link the EMX packages with the providers dataset, and update submission status
+print2('Updating EMX IDs in ERN Data Providers....')
+
 providers = dt.Frame(genturis.get('ernstats_dataproviders'))
 del providers['_href']
 
@@ -94,6 +173,8 @@ providers['databaseID'] = dt.Frame([
 
 genturis.importDatatableAsCsv('ernstats_dataproviders',providers)
 
+#///////////////////////////////////////
+
 # ~ 1b ~
 # Retrieve metadata
 # Using the list of emx package IDs, loop through each table and retrieve the
@@ -104,16 +185,36 @@ genturis.importDatatableAsCsv('ernstats_dataproviders',providers)
 #   3. Date at time of inclusion
 #   4. Thematic disease grouping
 #
+print2('Retrieving subject metadata.....')
 
 subjects = []
 packageIDs = packages['id'].to_list()[0]
 
+columns=','.join([
+  'ID_Patient',
+  'Sex',
+  # columns for calculating age
+  'YearBirth',
+  'YearDeath',
+  'DateLastInfo',
+  'YearFollowup',
+  # columns for calcuating disease group assignment
+  'InclCriteria',
+  'VariantClass_1',
+  'VariantClass_2',
+  'VariantClass_3',
+  'VariantClass_4',
+  'VariantGene_1',
+  'VariantGene_2',
+  'VariantGene_3',
+  'VariantGene_4',
+  'ORDO',
+  'InclCriteriaUnexplained',
+])
+
 for pkg in tqdm(packageIDs):
-  pkgData = genturis.get(
-    entity=f"{pkg}_subject",
-    attributes='ID_Patient,Sex,YearBirth,DateLastInfo,YearFollowup,ORDO',
-    batch_size=1000
-  )
+  print2('\tQuerying',f"{pkg}_subject")
+  pkgData = genturis.get(f"{pkg}_subject", attributes=columns,batch_size=1000)
   if bool(pkgData):
     for row in pkgData:
       row['databaseID'] = pkg
@@ -122,12 +223,15 @@ for pkg in tqdm(packageIDs):
   else:
     providers[f.databaseID==pkg, 'hasSubmittedData'] = False
 
-print(f"Retrieved {len(subjects)} subjects")
+print2(f"Retrieved {len(subjects)} subjects....")
+
+#///////////////////////////////////////
 
 # ~ 1c ~
 # Reshape subjects dataset
+print2('Transforming subjects dataset....')
 
-subjectsDT = flattenDataset(subjects, columnPatterns='label|code')
+subjectsDT = flattenDataset(subjects, columnPatterns='id|code')
 subjectsDT = dt.Frame(subjectsDT)
 
 # fix extra white space in subjectID
@@ -136,28 +240,48 @@ subjectsDT['ID_Patient'] = dt.Frame([
   for value in subjectsDT['ID_Patient'].to_list()[0]
 ])
 
+
 # format YearBirth
+print2('Applying default date format...')
+
 subjectsDT['YearBirth'] = dt.Frame([
-  f"{value}-01-01" if value else value
+  yearToDate(value) if value else value
   for value in subjectsDT['YearBirth'].to_list()[0]
 ])
 
 # Format YearFollowup if available
 if 'YearFollowup' in subjectsDT.names:
   subjectsDT['YearFollowup'] = dt.Frame([
-    f"{value}-01-01" if value else value
+    yearToDate(value) if value else value
     for value in subjectsDT['YearFollowup'].to_list()[0]
   ])
 else:
   subjectsDT['YearFollowup'] = None
 
-# find most recent date -- YearFollowup takes priority over DateLastInfo
+
+# Format YearDeath if available
+if 'YearDeath' in subjectsDT.names:
+  subjectsDT['YearDeath'] = dt.Frame([
+    yearToDate(value) if value else value
+    for value in subjectsDT['YearDeath'].to_list()[0]
+  ])
+else:
+  subjectsDT['YearDeath'] = None
+
+
+# find most recent date
+recentDates = subjectsDT[:, (f.DateLastInfo,f.YearFollowup, f.YearDeath)] \
+  .to_pandas() \
+  .replace({np.nan: None}) \
+  .to_dict('records')
+
 subjectsDT['recentDate'] = dt.Frame([
-  row[1] if bool(row[1]) else row[0]
-  for row in subjectsDT[:, (f.DateLastInfo, f.YearFollowup)].to_tuples()
+  findDateLastContact(row)
+  for row in recentDates
 ])
 
-# as.date
+
+# change class to date32
 subjectsDT[
   :, dt.update(
     YearBirth = as_type(f.YearBirth, dt.Type.date32),
@@ -167,10 +291,9 @@ subjectsDT[
 
 # format ORDO string
 subjectsDT['ORDO'] = dt.Frame([
-  value.replace(':','_').strip() if value else value
+  value.strip() if value else value
   for value in subjectsDT['ORDO'].to_list()[0]
 ])
-
 
 # check IDs
 if dt.unique(subjectsDT['ID_Patient']).nrows != subjectsDT.nrows:
@@ -179,7 +302,7 @@ if dt.unique(subjectsDT['ID_Patient']).nrows != subjectsDT.nrows:
 #///////////////////////////////////////////////////////////////////////////////
 
 # ~ 2 ~
-# Calculate descriptives
+# Summarise data
 
 # ~ 2a ~
 # Calcuate data-highlights
@@ -212,26 +335,26 @@ ernstats[f.id=='data-highlight-2','value'] = totalCenters
 
 # Calcuate age at the row-level
 subjectsDT['age'] = dt.Frame([
-  round(int((row[1] - row[0]).days) / 365.25, 4)
+  round(int((row[1] - row[0]).days) / 364.25, 4)
   if row[0] and row[1] else None
   for row in subjectsDT[:, (f.YearBirth, f.recentDate)].to_tuples()
 ])
 
-# Create bins for age ranges
-subjectsPD = subjectsDT.to_pandas()
-bins = pd.IntervalIndex.from_tuples([
-  (0, 19.9999),
-  (20,29.9999),
-  (30,39.9999),
-  (40,49.9999),
-  (50,59.9999),
-  (60,69.9999),
-  (70,np.inf)
-])
+# apply maximum age to missing values
+if subjectsDT[f.age==None,'age'].nrows > 0:
+  print2('Applying max age to missing values...')
+  maxAge = subjectsDT[:, dt.max(f.age)].to_list()[0][0]
+  subjectsDT['age'] = dt.Frame([
+    maxAge if not bool(value) else value
+    for value in subjectsDT['age'].to_list()[0]
+  ])
 
+# bin age
+subjectsPD = subjectsDT.to_pandas()
+bins = [0] + [num for num in range(20,80,10)] + [np.inf]
 labels=['<20','20-29','30-39','40-49','50-59','60-69','70+']
 
-subjectsPD['bin'] = pd.cut(subjectsPD['age'], bins=bins).map(dict(zip(bins,labels)))
+subjectsPD['bin']=pd.cut(subjectsPD['age'],bins=bins,labels=labels,right=False)
 subjectsDT = dt.Frame(subjectsPD)
 
 # Summarise data and update stats dataset
@@ -239,7 +362,9 @@ ageByGroup = subjectsDT[:, dt.count(), dt.by(f.bin)]
 
 for value in ageByGroup['bin'].to_list()[0]:
   if value in ernstats[f.component=='barchart-age', 'label'].to_list()[0]:
-    ernstats[f.label==value,'value'] = ageByGroup[f.bin==value,'count'].to_list()[0][0]
+    ernstats[f.label==value,'value'] = ageByGroup[
+      f.bin==value, 'count'
+    ].to_list()[0][0]
   else:
     raise SystemError(f'Error: age group {value} not found in stats table!')
 
@@ -247,18 +372,184 @@ for value in ageByGroup['bin'].to_list()[0]:
 
 # ~ 2c ~
 # Summarise sexAtBirth
+
 sexAtBirth = subjectsDT[:, dt.count(), dt.by(f.Sex)]
-for value in sexAtBirth['Sex'].to_list()[0]:
+sexAtBirth.names = { 'Sex': 'id' }
+
+# merge reference list
+sexCodes.key = 'id'
+sexAtBirth = sexAtBirth[:, :, dt.join(sexCodes)]
+
+for value in sexAtBirth['label'].to_list()[0]:
   if value in ernstats[f.component=='pie-sex-at-birth','label'].to_list()[0]:
-    ernstats[f.label==value,'value'] = sexAtBirth[f.Sex==value,'count'].to_list()[0][0]
+    ernstats[f.label==value,'value'] = sexAtBirth[
+      f.label==value,'count'
+    ].to_list()[0][0]
   else:
-    raise SystemError(f"ERror: value {value} not a known sex code")
+    raise SystemError(f"Error: value {value} uknown. Please check sex code mappings....")
 
 #///////////////////////////////////////
 
 # ~ 2d ~
-# Summarise data by thematic disease group
-# TBD
+# Apply thematic disease groups (TDG) and summarise
+# 1 = nf
+# 2 = lynch
+# 3 = hboc
+# 4 = other
+
+subjectsDT['diseaseGroup'] = None
+
+# ~ 2d.i ~
+# Assign TDG based on one inclusion criteria
+print2('Setting diseaseGroup based on `InclCriteria`....')
+
+subjectsDT['diseaseGroup'] = dt.Frame([
+  # TDG #3
+  # If there isn't a value and the value equals the 1st inclusion criteria value
+  diseaseGroups[f.id=='3','groupName'].to_list()[0][0]
+  if not bool(value) & (value == inclusionCriteria[f.id==1,'label'].to_list()[0][0])
+  else (
+    # FOR TDG #2
+    # If there isn't a value and the value equals the 2nd inclusion criteria value
+    diseaseGroups[f.id=='2','groupName'].to_list()[0][0]
+    if not bool(value) & (value == inclusionCriteria[f.id==2,'label'].to_list()[0][0])
+    else value
+  )
+  for value in subjectsDT['InclCriteria'].to_list()[0]
+])
+
+# ~ 2d.ii ~
+# Assign TDG based on one inclusion criteria + gen
+# Does the case meet the following conditions?
+#
+#  [] The value "Other..." for inclusion criteria
+#  [] Has a classification of "Likely Pathogenic" or "Pathogenic"
+#  [] The gene appears in the disease group gene list
+#  [] A TDG was assigned not in an earlier step
+#
+print2('Setting diseaseGroup based on `InclCriteria`, classification, and gene...')
+genesByGroup=diseaseGroupCriteria[f.type=='GENE',(f.groupName,f.value)]
+geneList = genesByGroup['value'].to_list()[0]
+
+subjectsDT['diseaseGroup'] = dt.Frame([
+  row[3] if not all(row) else (
+    genesByGroup[f.value==row[2], 'groupName'].to_list()[0][0]
+    if (
+      row[0] == inclusionCriteria[f.id==3,'label'].to_list()[0][0] &
+      row[1] in ['Likely pathogenic', 'Pathogenic'] &
+      row[2] in geneList
+    )
+    else row[3]
+  ) 
+  
+  for row in subjectsDT[:, (
+    f.InclCriteria,
+    f.VariantClass_1,
+    f.VariantGene_1,
+    f.diseaseGroup
+  )].to_tuples()
+])
+
+# ~ 2d.iii ~
+# Assign TDG based on ORDO codes
+# Does the case meet the following conditions?
+#
+#  [] The ORDO code appears in the code list
+#  [] A TDG was assigned not in an earlier step
+#
+print2('Setting disease group based on ORDO codes....')
+
+ordoByGroup = diseaseGroupCriteria[f.type=='ORDO', (f.groupName,f.value)]
+ordoList = ordoByGroup['value'].to_list()[0]
+
+subjectsDT['diseaseGroup'] = dt.Frame([
+  row[1] if bool(row[1]) else (
+    ordoByGroup[f.value==row[0], 'groupName'].to_list()[0][0]
+    if row[0] in ordoList
+    else row[1]
+  )
+  for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuples()
+])
+
+# ~ 2d.iv ~
+# Manually set TDG based on unexplained exclusion criteria
+print2('Setting disease groups based on `InclCriteriaUnexplained`...')
+
+# set TDG #2 for unexplained criteria ID==2|3
+subjectsDT['diseaseGroup'] = dt.Frame(
+  row[1] if bool(row[1]) else (
+    row[1] if not bool(row[0]) else (
+      diseaseGroups[f.id=='2','groupName'].to_list()[0][0]
+      if row[0] in inclusionCriteriaUnexplained[
+        (f.id==2) | (f.id==3),
+        f.label
+      ].to_list()[0]
+      else row[1]
+    )
+  )
+  for row in subjectsDT[:, (f.InclCriteriaUnexplained, f.diseaseGroup)].to_tuples()
+)
+
+# set TDG #3 for unexplained criteria ID==4|5
+subjectsDT['diseaseGroup'] = dt.Frame(
+  row[1] if bool(row[1]) else (
+    row[1] if not bool(row[0]) else (
+      diseaseGroups[f.id=='2','groupName'].to_list()[0][0]
+      if row[0] in inclusionCriteriaUnexplained[
+        (f.id==4) | (f.id==5),
+        f.label
+      ].to_list()[0]
+      else row[1]
+    )
+  )
+  for row in subjectsDT[:, (f.InclCriteriaUnexplained, f.diseaseGroup)].to_tuples()
+)
+
+# ~ 2d.v ~
+# Override TDG for special cases
+print2('Overriding diseaseGroup based on group 2 assignment and ORDO code...')
+
+subjectsDT['diseaseGroup'] = dt.Frame([
+  diseaseGroups[f.id=='4','groupName'].to_list()[0][0]
+  if row[1] == '2' & row[0] == 'ORPHA:252202'
+  else row[1]
+  for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuple()
+])
+
+# TODO
+# ~ 2d.vi ~
+# Override TDG based on ....
+subjectsDT['diseaseGroup'] = dt.Frame([
+  
+])
+
+# ~ 2d.vii ~
+# Override TDG 3 based on ORDO code
+# Change to Group 4 if the following conditions are met
+#
+#   [ ] Current TDG is 3
+#   [ ] ORDO term is: Ataxia-telangiectasia
+#
+subjectsDT['diseaseGroup'] = dt.Frame([
+  row[1] if not bool(row[1]) else (
+    diseaseGroups[f.id=='4', 'groupName'].to_list()[0][0]
+    if (
+      row[0] == 'ORPHA:100' &
+      row[1] == diseaseGroups[f.id=='3', 'groupName'].to_list()[0][0]
+    )
+    else row[1]
+  )
+  for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuple()
+])
+
+# ~ 2d.ix ~
+# Override TDG if ORDO is "Birt-Hogg-Dubé syndrome" (ORPHA:122)
+subjectsDT['diseaseGroup'] = dt.Frame([
+  diseaseGroups[f.id=='4', 'groupName'].to_list()[0][0]
+  if row[0] == 'ORPHA:122'
+  else row[1]
+  for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuple()
+])
 
 
 #///////////////////////////////////////////////////////////////////////////////
