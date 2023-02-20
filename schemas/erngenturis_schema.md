@@ -4,13 +4,14 @@
 
 | Name | Description | Parent |
 |:---- |:-----------|:------|
-| ernstats | Descriptives on enrolled patients and data providers (v1.2.0, 2022-12-01) | - |
+| ernstats | Descriptives on enrolled patients and data providers (v1.3.0, 2023-02-20) | - |
 
 ## Entities
 
 | Name | Description | Package |
 |:---- |:-----------|:-------|
 | dataproviders | All affiliated data providers (intitutions, hospitals, etc.) | ernstats |
+| inclusionCriteria | Define or modify inclusion criteria for each subgroup | ernstats |
 | stats | Stats used in the dashboard | ernstats |
 
 ## Attributes
@@ -40,6 +41,20 @@ All affiliated data providers (intitutions, hospitals, etc.)
 | country | - | A collective generic term that refers here to a wide variety of dependencies, areas of special sovereignty, uninhabited islands, and other entities in addition to the traditional countries or independent states. | string |
 | latitude | - | The angular distance north or south between an imaginary line around a heavenly body parallel to its equator and the equator itself. | decimal |
 | longitude | - | An imaginary great circle on the surface of a heavenly body passing through the poles at right angles to the equator. | decimal |
+
+### Entity: ernstats_inclusionCriteria
+
+Define or modify inclusion criteria for each subgroup
+
+| Name | Label | Description | Data Type |
+|:---- |:-----|:-----------|:---------|
+| _id&#8251; | - | table row identifier | - |
+| groupID | - | A unique ID used to identify a group | - |
+| groupName | - | Name of the group | - |
+| criteria | - | - | compound |
+| type | - | A variable to identify criteria for a specific group (e.g., "genes", "disease", etc.) | - |
+| value | - | values used to select rows (IDs, codes, etc.) | - |
+| label | - | additional context that describes the criteria | - |
 
 ### Entity: ernstats_stats
 

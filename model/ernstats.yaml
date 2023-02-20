@@ -12,8 +12,8 @@
 name: ernstats
 label: ERN Summary Statistics
 description: Descriptives on enrolled patients and data providers
-version: 1.2.0
-date: 2022-12-01
+version: 1.3.0
+date: 2023-02-20
 
 defaults:
   idAttribute: false
@@ -120,6 +120,37 @@ entities:
         dataType: decimal
         tags: NCIT_C68643 http://purl.obolibrary.org/obo/NCIT_C68643
         partOfAttribute: centerLocation
+      
+  - name: inclusionCriteria
+    label: Inclusion criteria
+    description: Define or modify inclusion criteria for each subgroup
+    attributes:
+      - name: _id
+        description: table row identifier
+        idAttribute: true
+        nillable: false
+        unique: true
+      
+      - name: groupID
+        description: A unique ID used to identify a group
+
+      - name: groupName 
+        description: Name of the group
+      
+      - name: criteria
+        dataType: compound
+         
+      - name: type
+        description: A variable to identify criteria for a specific group (e.g., "genes", "disease", etc.)
+        partOfAttribute: criteria
+        
+      - name: value
+        description: values used to select rows (IDs, codes, etc.)
+        partOfAttribute: criteria
+        
+      - name: label
+        description: additional context that describes the criteria
+        partOfAttribute: criteria
       
   - name: stats
     label: Summary Statistics
