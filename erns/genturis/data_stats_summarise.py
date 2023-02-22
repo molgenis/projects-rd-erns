@@ -2,10 +2,10 @@
 # FILE: data_stats_summarise.py
 # AUTHOR: David Ruvolo
 # CREATED: 2023-02-16
-# MODIFIED: 2023-02-16
+# MODIFIED: 2023-02-21
 # PURPOSE: summarise data for dashboard
 # STATUS: in.progress
-# PACKAGES: NA
+# PACKAGES: **see below**
 # COMMENTS: NA
 #///////////////////////////////////////////////////////////////////////////////
 
@@ -14,7 +14,6 @@ from datatable import dt, f, as_type
 from dotenv import load_dotenv
 from datetime import datetime
 from os import environ
-from tqdm import tqdm
 import pandas as pd
 import numpy as np
 import functools
@@ -44,7 +43,7 @@ def flattenDataset(data, columnPatterns=None):
   @return a new recordset containing flattened data
   """
   newData = data
-  for row in tqdm(newData):
+  for row in newData:
     if '_href' in row:
       del row['_href']
     for column in row.keys():
@@ -138,22 +137,6 @@ diseaseGroups = diseaseGroupCriteria[
   :, dt.first(f[:]), dt.by(f.groupID,f.groupName)
 ][:, (f.groupID, f.groupName)]
 
-# print2('Reshaping inclusion criteria dataset....')
-# diseaseGroupGenes = {}
-# diseaseGroupOrdo = {}
-# for group in dt.unique(diseaseGroupCriteria[f.type=='GENE','groupID']).to_list()[0]:
-#   # isolate group *n* genes
-#   diseaseGroupGenes[group] = diseaseGroupCriteria[
-#     (f.type=='GENE') & (f.groupID==group),
-#     'value'
-#   ].to_list()[0]
-  
-#   # isolate group *n* ORDO codes
-#   diseaseGroupOrdo[group] = diseaseGroupCriteria[
-#     (f.type=='ORDO') & (f.groupID==group),
-#     'value'
-#   ].to_list()[0]
-
 #///////////////////////////////////////
 
 # ~ 1a ~
@@ -212,7 +195,7 @@ columns=','.join([
   'InclCriteriaUnexplained',
 ])
 
-for pkg in tqdm(packageIDs):
+for pkg in packageIDs:
   print2('\tQuerying',f"{pkg}_subject")
   pkgData = genturis.get(f"{pkg}_subject", attributes=columns,batch_size=1000)
   if bool(pkgData):
@@ -507,6 +490,8 @@ subjectsDT['diseaseGroup'] = dt.Frame(
 
 # ~ 2d.v ~
 # Override TDG for special cases
+# If the group assignment is 2 and the ORDO code is 252202, then assign to group 4
+# ORDO Term: "Constitutional mismatch repair deficiency syndrome"
 print2('Overriding diseaseGroup based on group 2 assignment and ORDO code...')
 
 subjectsDT['diseaseGroup'] = dt.Frame([
@@ -519,9 +504,23 @@ subjectsDT['diseaseGroup'] = dt.Frame([
 # TODO
 # ~ 2d.vi ~
 # Override TDG based on ....
+#
+
+# TODO Create a function that calculates row sums before
+subjectsDT[:, [('VariantGene' | 'VariantClass') in column for column in subjectsDT.names]]
+
+
 subjectsDT['diseaseGroup'] = dt.Frame([
-  
+  diseaseGroups[f.id=='4', 'groupName'].to_list()[0][0]
+  if (
+    value == diseaseGroups[f.id=='2', 'groupName'].to_list()[0][0]
+  ) else value
+  for value in subjectsDT['diseaseGroup'].to_list()[0]
 ])
+
+# TODO
+# SEE .R SCRIPT
+
 
 # ~ 2d.vii ~
 # Override TDG 3 based on ORDO code
@@ -530,17 +529,19 @@ subjectsDT['diseaseGroup'] = dt.Frame([
 #   [ ] Current TDG is 3
 #   [ ] ORDO term is: Ataxia-telangiectasia
 #
-subjectsDT['diseaseGroup'] = dt.Frame([
-  row[1] if not bool(row[1]) else (
-    diseaseGroups[f.id=='4', 'groupName'].to_list()[0][0]
-    if (
-      row[0] == 'ORPHA:100' &
-      row[1] == diseaseGroups[f.id=='3', 'groupName'].to_list()[0][0]
-    )
-    else row[1]
-  )
-  for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuple()
-])
+# TODO: Replace with new code block where ATM is checked
+
+# subjectsDT['diseaseGroup'] = dt.Frame([
+#   row[1] if not bool(row[1]) else (
+#     diseaseGroups[f.id=='4', 'groupName'].to_list()[0][0]
+#     if (
+#       row[0] == 'ORPHA:100' &
+#       row[1] == diseaseGroups[f.id=='3', 'groupName'].to_list()[0][0]
+#     )
+#     else row[1]
+#   )
+#   for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuple()
+# ])
 
 # ~ 2d.ix ~
 # Override TDG if ORDO is "Birt-Hogg-Dubé syndrome" (ORPHA:122)
