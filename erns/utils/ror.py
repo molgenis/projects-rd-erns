@@ -24,6 +24,17 @@ class RorClient:
       raise print('Error in request', str(response['errors']))
     return response.json()
     
+  def ping(self):
+    """Ping the ROR service
+    Check the status of the REST API
+    """
+    url = f"{self.api}/heartbeat"
+    response = self.GET(url)
+    if response.status_code / 100 == 2:
+      print(f'ROR is online {response.status_code}')
+    else:
+      print(f"ROR service may be disrupted ({response.status_code})")
+    
   def searchOrganizations(self, query):
     """Search Organizations
     
@@ -38,3 +49,16 @@ class RorClient:
     
     print('Found', response.get('number_of_results'), 'records')
     return response.get('items')
+    
+  def getOrganisationById(self, id):
+    """Get organisation by ROR ID
+    Retrieve metadata about an organisation using a ROR ID. An ID may contain a full URL (`https://ror.org/<id>`), domain + ID (`ror.org/<id>`), or only the ID.
+    
+    @param id A ROR identifier; either a URL or ID
+    
+    @return json
+    """
+    url = f"{self.api}/organizations/{id}"
+    response = self.GET(url)
+    return response
+    
