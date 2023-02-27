@@ -5,12 +5,14 @@ charset-normalizer==3.0.1
 clize==5.0.0
 datatable @ git+https://github.com/h2oai/datatable@a68ff5c2a913e200811f2e55edf078e53ab945e0
 docutils==0.19
+et-xmlfile==1.1.0
 exceptiongroup==1.1.0
 h11==0.14.0
 idna==3.4
 molgenis-py-client==2.4.1
 numpy==1.24.2
 od==2.0.2
+openpyxl==3.1.0
 outcome==1.2.0
 pandas==1.5.3
 PySocks==1.7.1
