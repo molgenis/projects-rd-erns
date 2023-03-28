@@ -2,7 +2,7 @@
 # FILE: data_stats_summarise.py
 # AUTHOR: David Ruvolo
 # CREATED: 2023-02-16
-# MODIFIED: 2023-03-08
+# MODIFIED: 2023-03-28
 # PURPOSE: summarise data for dashboard
 # STATUS: stable
 # PACKAGES: **see below**
@@ -270,8 +270,6 @@ providers['databaseID'] = dt.Frame([
   for value in providers['projectName'].to_list()[0]
 ])
 
-genturis.importDatatableAsCsv('ernstats_dataproviders',providers)
-
 #///////////////////////////////////////
 
 # ~ 1b ~
@@ -339,8 +337,7 @@ subjectsDT = dt.Frame(subjectsDT)
 
 # fix extra white space in subjectID
 subjectsDT['ID_Patient'] = dt.Frame([
-  value.strip()
-  for value in subjectsDT['ID_Patient'].to_list()[0]
+  value.strip() for value in subjectsDT['ID_Patient'].to_list()[0]
 ])
 
 # format YearBirth
@@ -477,21 +474,33 @@ for value in ageByGroup['bin'].to_list()[0]:
 # ~ 2c ~
 # Summarise sexAtBirth
 print2('Summarising sexAtBirth....')
-sexAtBirth = subjectsDT[:, dt.count(), dt.by(f.Sex)]
-sexAtBirth.names = { 'Sex': 'id' }
 
-# merge reference list
+# isolate sex at birth and merge lookup lists
+sexBySubject = subjectsDT[:, f.Sex]
+sexBySubject.names = { 'Sex': 'id' }
+
 sexCodes.key = 'id'
-sexAtBirth = sexAtBirth[:, :, dt.join(sexCodes)]
+sexBySubject = sexBySubject[:, :, dt.join(sexCodes)]
 
-# rename foetus case to other ?
-sexAtBirth[f.label=='Foetus (unknown)', 'label'] = 'Other'
+# regroup "Foetus (unknown)" and "Undetermined" cases to other
+sexBySubject['label'] = dt.Frame([
+  'Other' if (value == 'Foetus (unknown)') or (value == 'Undetermined') else value
+  for value in sexBySubject['label'].to_list()[0]
+])
 
+# summarise data
+sexAtBirth = sexBySubject[:, dt.count(), dt.by(f.label)]
+
+# calcuate percentages
+sexAtBirth['rate'] = dt.Frame([
+  round((value / sum(sexAtBirth['count'].to_list()[0])) * 100, 0)
+  for value in sexAtBirth['count'].to_list()[0]
+])
+
+# update summary stats dataset
 for value in sexAtBirth['label'].to_list()[0]:
   if value in ernstats[f.component=='pie-sex-at-birth','label'].to_list()[0]:
-    ernstats[f.label==value,'value'] = sexAtBirth[
-      f.label==value,'count'
-    ].to_list()[0][0]
+    ernstats[f.label==value,'value'] = sexAtBirth[f.label==value,'rate'].to_list()[0][0]
   else:
     raise SystemError(f"Error: value {value} uknown. Please check sex code mappings....")
 
@@ -508,7 +517,6 @@ for value in sexAtBirth['label'].to_list()[0]:
 #  4 = other
 #
 print2('Determining thematic disease group assignment....')
-subjectsDT['diseaseGroup'] = None
 
 # ~ 2d.i ~
 # Assign TDG 2 or 3 based on one inclusion criteria. The following conditions
@@ -516,16 +524,19 @@ subjectsDT['diseaseGroup'] = None
 #   3: If there isn't a value and the value equals the 1st inclusion criteria value
 #   2: If there isn't a value and the value equals the 2nd inclusion criteria value
 #
-print2('Setting diseaseGroup based on `InclCriteria`....')
-
+print2('Setting diseaseGroup based on one `InclCriteria`....')
 subjectsDT['diseaseGroup'] = dt.Frame([
-  '3' if not bool(value) & (value == 1) else (
-    '2' if not bool(value) & (value == 2) else value
+  None if bool(value) else (
+    '3' if value == 1 else (
+      '2' if value == 2 else None
+    )
   )
   for value in subjectsDT['InclCriteria'].to_list()[0]
 ])
 
 # subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)]
+
+#///////////////////////////////////////
 
 # ~ 2d.ii ~
 # Assign TDG based on one inclusion criteria + gen
@@ -541,15 +552,13 @@ genesByGroup=diseaseGroupCriteria[f.type=='GENE',(f.groupID,f.value)]
 geneList = genesByGroup['value'].to_list()[0]
 
 subjectsDT['diseaseGroup'] = dt.Frame([
-  row[3] if not all(row) else (
+  row[3] if bool(row[3]) else (
     genesByGroup[f.value==row[2], 'groupID'].to_list()[0][0]
     if (
-      # inclusion criteria == "Other proven pathogenic..."
       (str(row[0]) == '3') &
       (str(row[1]) == '2' or str(row[1]) == '3') &
       (str(row[2]) in geneList)
-    )
-    else row[3]
+    ) else row[3]
   )
   for row in subjectsDT[:, (
     f.InclCriteria,
@@ -558,6 +567,8 @@ subjectsDT['diseaseGroup'] = dt.Frame([
     f.diseaseGroup
   )].to_tuples()
 ])
+
+#///////////////////////////////////////
 
 # ~ 2d.iii ~
 # Assign TDG based on ORDO codes
@@ -578,6 +589,10 @@ subjectsDT['diseaseGroup'] = dt.Frame([
   )
   for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuples()
 ])
+
+# subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)]
+
+#///////////////////////////////////////
 
 # ~ 2d.iv ~
 # Manually set TDG based on unexplained exclusion criteria
@@ -602,6 +617,10 @@ subjectsDT['diseaseGroup'] = dt.Frame([
   for row in subjectsDT[:, (f.InclCriteriaUnexplained, f.diseaseGroup)].to_tuples()
 ])
 
+# subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)]
+
+#///////////////////////////////////////
+
 # ~ 2d.v ~
 # Override TDG for special cases
 # If the group assignment is 2 and the ORDO code is 252202, then assign to group 4
@@ -612,6 +631,9 @@ subjectsDT['diseaseGroup'] = dt.Frame([
   for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuples()
 ])
 
+# subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)]
+
+#///////////////////////////////////////
 
 # ~ 2d.vi-vii ~
 # Calculate rowsums and override
@@ -636,6 +658,10 @@ subjectsDT['diseaseGroup'] = dt.Frame([
   for row in subjectsDT[:, ['diseaseGroup', 'sumGeneClass']].to_tuples()
 ])
 
+# subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)]
+
+#///////////////////////////////////////
+
 # ~ 2d.vii ~
 # Override TDG based on gene, classification, and zygosity
 calcRowSums(
@@ -653,6 +679,10 @@ subjectsDT['diseaseGroup'] = dt.Frame([
   for row in subjectsDT[:, ['diseaseGroup', 'sumGeneClassZygosity']].to_tuples()
 ])
 
+# subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)]
+
+#///////////////////////////////////////
+
 # ~ 2d.vii ~
 # Override TDG 3 based on ORDO code
 calcRowSums(
@@ -669,12 +699,18 @@ subjectsDT['diseaseGroup'] = dt.Frame([
   for row in subjectsDT[:, ['diseaseGroup', 'rowSumGroup3']].to_tuples()
 ])
 
+# subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)]
+
+#///////////////////////////////////////
+
 # ~ 2d.ix ~
 # Override TDG if ORDO is "Birt-Hogg-Dubé syndrome" (ORPHA:122)
 subjectsDT['diseaseGroup'] = dt.Frame([
   '4' if row[0] == 'ORPHA:122' else row[1]
   for row in subjectsDT[:, (f.ORDO, f.diseaseGroup)].to_tuples()
 ])
+
+#///////////////////////////////////////
 
 # ~ 2d.x ~
 # Summarise by group
