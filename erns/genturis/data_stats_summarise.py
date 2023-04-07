@@ -2,17 +2,15 @@
 # FILE: data_stats_summarise.py
 # AUTHOR: David Ruvolo
 # CREATED: 2023-02-16
-# MODIFIED: 2023-03-28
+# MODIFIED: 2023-04-07
 # PURPOSE: summarise data for dashboard
 # STATUS: stable
 # PACKAGES: **see below**
 # COMMENTS: This script summarises the data in the GENTURIS registry and creates
 # the following:
-#
 #   1. list of active and inactive healthcare providers
 #   2. summarises the number of cases per thematic disease group
 #   3. calculates descriptives: sex at birth, age at last follow-up
-#
 #///////////////////////////////////////////////////////////////////////////////
 
 import molgenis.client as molgenis
@@ -264,11 +262,10 @@ print2('Updating EMX IDs in ERN Data Providers....')
 providers = dt.Frame(genturis.get('ernstats_dataproviders'))
 del providers['_href']
 
-providers['databaseID'] = dt.Frame([
-  packages[f.label==value, 'id'].to_list()[0][0]
-  if value in packages['label'].to_list()[0] else None
-  for value in providers['projectName'].to_list()[0]
-])
+pkgCount = packages.nrows
+provderCount = providers[f.databaseID != None, :].nrows
+if pkgCount != provderCount:
+  raise SystemError(f"Error: number of EMX packages ({pkgCount}) must match total number of providers with EMX package IDs ({provderCount}). Please manually update database IDs.")
 
 #///////////////////////////////////////
 
