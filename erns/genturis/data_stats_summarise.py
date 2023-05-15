@@ -2,7 +2,7 @@
 # FILE: data_stats_summarise.py
 # AUTHOR: David Ruvolo
 # CREATED: 2023-02-16
-# MODIFIED: 2023-04-07
+# MODIFIED: 2023-05-15
 # PURPOSE: summarise data for dashboard
 # STATUS: stable
 # PACKAGES: **see below**
@@ -266,6 +266,10 @@ pkgCount = packages.nrows
 provderCount = providers[f.databaseID != None, :].nrows
 if pkgCount != provderCount:
   raise SystemError(f"Error: number of EMX packages ({pkgCount}) must match total number of providers with EMX package IDs ({provderCount}). Please manually update database IDs.")
+
+# for id in packages['id'].to_list()[0]:
+#   if id not in providers[f.databaseID!=None,'databaseID'].to_list()[0]:
+#     print('ID', id, 'missing')
 
 #///////////////////////////////////////
 
