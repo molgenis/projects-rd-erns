@@ -43,11 +43,12 @@ del statsDT['_href']
 
 # ~ 1a ~
 # Summarise data by age
-
+# For now, use today's date as the default. This should be updated later
 ageDT = subjectsDT[:, {
   'dateBirth': f.dateBirth,
   'dateToday': today()
 }]
+
 
 ageDT[:, dt.update(
   dateBirth=as_type(f.dateBirth,dt.Type.date32),
@@ -55,15 +56,15 @@ ageDT[:, dt.update(
 )]
 
 
+# calculate age
 ageDT['age'] = dt.Frame([
   round(int((row[1] - row[0]).days) / 364.25, 4)
   if all(row) else None
   for row in ageDT[:, (f.dateBirth, f.dateToday)].to_tuples()  
 ])
 
-
+# create bins and summarise data
 agePD = ageDT.to_pandas()
-
 bins = [0, 0.25, 1, 5,13,18,40, 60,np.inf]
 labels = [
   'Newborn',
@@ -83,6 +84,8 @@ ageByGroup = ageDT[:, dt.count(), dt.by(f.bin)]
 
 for bin in ageByGroup['bin'].to_list()[0]:
   statsDT[f.label==bin, 'value'] = ageByGroup[f.bin==bin,'count']
+  
+#///////////////////////////////////////
 
 # ~ 1b ~
 # Summarise data by `sexAtBirth`
@@ -106,8 +109,30 @@ sexAtBirth['id'] = dt.Frame([
 for id in sexAtBirth['id'].to_list()[0]:
   statsDT[f.id==id, 'value'] = sexAtBirth[f.id==id,'rate']
 
-ernskin.importDatatableAsCsv('ernstats_stats', statsDT)
 
+#///////////////////////////////////////
+
+# ~ 1c ~
+# Summarise enrollment by disease group
+
+# get lookup table for disease group
+groups = dt.Frame(ernskin.get('erras_diseasegroup'))[:, {'id': f.id, 'label': f.value}]
+groups.key = 'id'
+
+diseaseGroupDT = subjectsDT[
+  :, dt.count(), dt.by(f.diseaseGroup)
+][
+  :, {'id': f.diseaseGroup, 'value': f.count}
+][:, :, dt.join(groups)]
+
+diseaseGroupDT['id'] = diseaseGroupDT[:, 'enrollment-' + f.id]
+
+for id in diseaseGroupDT['id'].to_list()[0]:
+  statsDT[f.id==id, 'value'] = diseaseGroupDT[f.id==id,'value']
+
+
+
+ernskin.importDatatableAsCsv('ernstats_stats', statsDT)
 
 #///////////////////////////////////////////////////////////////////////////////
 
