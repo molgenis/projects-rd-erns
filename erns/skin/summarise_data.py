@@ -13,10 +13,15 @@ from erns.utils.molgenis2 import Molgenis
 from erns.utils.utils import flattenDataset
 from datatable import dt, f, as_type
 from dotenv import load_dotenv
+from datetime import datetime
 from os import environ
 import pandas as pd
 import numpy as np
+import pytz
 load_dotenv()
+
+def today(tz='Europe/Amsterdam'):
+  return datetime.now(tz=pytz.timezone(tz)).strftime('%Y-%m-%d')
 
 ernskin = Molgenis(environ['ERRAS_PROD_HOST'])
 ernskin.login(environ['ERRAS_PROD_USR'], environ['ERRAS_PROD_PWD'])
@@ -41,7 +46,7 @@ del statsDT['_href']
 
 ageDT = subjectsDT[:, {
   'dateBirth': f.dateBirth,
-  'dateToday': '2023-06-01'
+  'dateToday': today()
 }]
 
 ageDT[:, dt.update(
@@ -56,11 +61,22 @@ ageDT['age'] = dt.Frame([
   for row in ageDT[:, (f.dateBirth, f.dateToday)].to_tuples()  
 ])
 
-agePD = ageDT.to_pandas()
-bins = [0] + [num for num in range(20,80,10)] + [np.inf]
-labels=['<20','20-29','30-39','40-49','50-59','60-69','70+']
 
-agePD['bin']=pd.cut(agePD['age'],bins=bins,labels=labels,right=False)
+agePD = ageDT.to_pandas()
+
+bins = [0, 0.25, 1, 5,13,18,40, 60,np.inf]
+labels = [
+  'Newborn',
+  'Infant',
+  'Todler',
+  'Kids',
+  'Teenagers',
+  'Adults group 1',
+  'Adults group 2',
+  'Elderly persons',
+]
+
+agePD['bin'] = pd.cut(agePD['age'],bins=bins,labels=labels,right=False)
 ageDT = dt.Frame(agePD)
 
 ageByGroup = ageDT[:, dt.count(), dt.by(f.bin)]
@@ -109,13 +125,23 @@ ernskin.importDatatableAsCsv('ernstats_stats', statsDT)
 # groupsDT['value'] = 0
 # groupsDT[:, dt.update(id=as_type(f.id, dt.Type.int32))]
 # groupsDT['valueOrder'] = groupsDT[:, f.id-1]
-
 # groupsDT['id'] = groupsDT[:, 'enrollment-' + f.id]
 
 # ernskin.importDatatableAsCsv('ernstats_stats', groupsDT)
 
-# # define age groups
-# ageDT = dt.Frame(label=['<20','20-29','30-39','40-49','50-59','60-69','70+'])
+
+# set age groups as defined by the project guidelines
+# ageDT = dt.Frame([
+#   {'label': 'Newborn', 'description': '0-3 months'},
+#   {'label': 'Infant', 'description': '3-12 months'},
+#   {'label': 'Todler', 'description': '1-5 years'},
+#   {'label': 'Kids', 'description': '5-13 years'},
+#   {'label': 'Teenagers', 'description': '13-18 years'},
+#   {'label': 'Adults group 1', 'description': '18-40 years'},
+#   {'label': 'Adults group 2', 'description': '40-60 years'},
+#   {'label': 'Elderly persons', 'description': '60+'},
+# ])
+
 # ageDT[['id','valueOrder']] = range(0,ageDT.nrows)
 # ageDT['value'] = 0
 # ageDT['id'] = ageDT[:, 'age-group-' + f.id]
