@@ -33,8 +33,8 @@ subjectsDT = flattenDataset(data=subjects, columnPatterns='value_en|value|id')
 subjectsDT = dt.Frame(subjectsDT)
 
 # get stats
-statsDT = dt.Frame(ernskin.get('ernstats_stats'))
-del statsDT['_href']
+stats = ernskin.get('stats_stats')
+statsDT = dt.Frame(flattenDataset(stats, columnPatterns='name'))
 
 #///////////////////////////////////////////////////////////////////////////////
 
@@ -58,8 +58,7 @@ ageDT[:, dt.update(
 
 # calculate age
 ageDT['age'] = dt.Frame([
-  round(int((row[1] - row[0]).days) / 364.25, 4)
-  if all(row) else None
+  round(int((row[1] - row[0]).days) / 364.25, 4) if all(row) else None
   for row in ageDT[:, (f.dateBirth, f.dateToday)].to_tuples()  
 ])
 
@@ -131,44 +130,8 @@ for id in diseaseGroupDT['id'].to_list()[0]:
   statsDT[f.id==id, 'value'] = diseaseGroupDT[f.id==id,'value']
 
 
+#///////////////////////////////////////
 
-ernskin.importDatatableAsCsv('ernstats_stats', statsDT)
-
-#///////////////////////////////////////////////////////////////////////////////
-
-# ~ 999 ~
-# Create Initial data structures
-
-# # create disease groups
-# groupsDT = dt.Frame(
-#   flattenDataset(
-#     data = ernskin.get('erras_diseasegroup'), 
-#     columnPatterns='id|value'
-#   )
-# )[:, {'id':f.id, 'label':f.value}]
-
-# groupsDT['value'] = 0
-# groupsDT[:, dt.update(id=as_type(f.id, dt.Type.int32))]
-# groupsDT['valueOrder'] = groupsDT[:, f.id-1]
-# groupsDT['id'] = groupsDT[:, 'enrollment-' + f.id]
-
-# ernskin.importDatatableAsCsv('ernstats_stats', groupsDT)
-
-
-# set age groups as defined by the project guidelines
-# ageDT = dt.Frame([
-#   {'label': 'Newborn', 'description': '0-3 months'},
-#   {'label': 'Infant', 'description': '3-12 months'},
-#   {'label': 'Todler', 'description': '1-5 years'},
-#   {'label': 'Kids', 'description': '5-13 years'},
-#   {'label': 'Teenagers', 'description': '13-18 years'},
-#   {'label': 'Adults group 1', 'description': '18-40 years'},
-#   {'label': 'Adults group 2', 'description': '40-60 years'},
-#   {'label': 'Elderly persons', 'description': '60+'},
-# ])
-
-# ageDT[['id','valueOrder']] = range(0,ageDT.nrows)
-# ageDT['value'] = 0
-# ageDT['id'] = ageDT[:, 'age-group-' + f.id]
-
-# ernskin.importDatatableAsCsv('ernstats_stats',ageDT)
+# ~ 1d ~
+# import data into stats_stats
+ernskin.importDatatableAsCsv('stats_stats', statsDT)
