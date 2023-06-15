@@ -2,9 +2,9 @@
 # FILE: summarise_data.py
 # AUTHOR: David Ruvolo
 # CREATED: 2023-06-13
-# MODIFIED: 2023-06-13
+# MODIFIED: 2023-06-15
 # PURPOSE: summarise data in the registry and prep for dashboard
-# STATUS: in.progress
+# STATUS: stable
 # PACKAGES: NA
 # COMMENTS: NA
 #///////////////////////////////////////////////////////////////////////////////
@@ -35,6 +35,10 @@ subjectsDT = dt.Frame(subjectsDT)
 # get stats
 stats = ernskin.get('stats_stats')
 statsDT = dt.Frame(flattenDataset(stats, columnPatterns='name'))
+
+# get healthcare providers
+providersDT = dt.Frame(ernskin.get('stats_dataproviders'))
+del providersDT['_href']
 
 #///////////////////////////////////////////////////////////////////////////////
 
@@ -129,6 +133,17 @@ diseaseGroupDT['id'] = diseaseGroupDT[:, 'enrollment-' + f.id]
 for id in diseaseGroupDT['id'].to_list()[0]:
   statsDT[f.id==id, 'value'] = diseaseGroupDT[f.id==id,'value']
 
+
+#///////////////////////////////////////
+
+# ~ 1d ~
+# Summarise submitted patients by centers
+centersDT = subjectsDT[:, dt.count(), dt.by(f.centre)]
+
+for id in centersDT['centre'].to_list():
+  providersDT[f.alternativeIdentifier==id, 'hasSubmittedData'] = True
+
+ernskin.importDatatableAsCsv('stats_dataproviders', providersDT)
 
 #///////////////////////////////////////
 
