@@ -100,7 +100,7 @@ sexAtBirth['rate'] = dt.Frame([
 ])
 
 sexAtBirth['id'] = dt.Frame([
-  f"sex-at-birth-{value.lower()}"
+  f"sex-{value.lower()}"
   for value in sexAtBirth['biologicalSex'].to_list()[0]
 ])
 
