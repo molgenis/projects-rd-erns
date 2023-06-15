@@ -9,7 +9,7 @@
 # COMMENTS: NA
 #///////////////////////////////////////////////////////////////////////////////
 
-from python.utils.molgenis2 import Molgenis
+from erns.utils.molgenis2 import Molgenis
 from dotenv import load_dotenv
 from os import environ
 import pandas as pd
@@ -46,3 +46,11 @@ genturisACC.importDatatableAsCsv('ernstats_stats', stats)
 
 # genturisPROD.logout()
 # genturisACC.logout()
+
+#///////////////////////////////////////
+
+# import files
+from os import path
+
+
+genturisPROD.importFile(file='ERN GENTURIS newsletter - special edition GENTURIS registry - June 2023.pdf')

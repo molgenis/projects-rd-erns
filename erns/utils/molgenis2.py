@@ -88,7 +88,7 @@ class Molgenis(molgenis.Session):
     mcmd give \ 
       --user <user> <read|view|write|...> \
       --entity <file-identifier-in-database> \
-      --package sys_FileMetaa
+      --package sys_FileMeta
     ```
     
     @return a status message with import metadata
