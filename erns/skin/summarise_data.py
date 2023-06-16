@@ -2,7 +2,7 @@
 # FILE: summarise_data.py
 # AUTHOR: David Ruvolo
 # CREATED: 2023-06-13
-# MODIFIED: 2023-06-15
+# MODIFIED: 2023-06-16
 # PURPOSE: summarise data in the registry and prep for dashboard
 # STATUS: stable
 # PACKAGES: NA
@@ -145,8 +145,21 @@ for id in centersDT['centre'].to_list():
 
 ernskin.importDatatableAsCsv('stats_dataproviders', providersDT)
 
-#///////////////////////////////////////
+# ~ 1e ~
+# Prepare summaries for data-highlights component
 
-# ~ 1d ~
+statsDT[f.label=='Patients', 'value'] = subjectsDT.nrows
+
+statsDT[f.label=='Member countries', 'value'] = dt.unique(
+  providersDT[f.hasSubmittedData,'country']
+).nrows
+
+statsDT[f.label=='Healthcare providers', 'value'] = dt.unique(
+  providersDT[f.hasSubmittedData, 'code']
+).nrows
+
+#///////////////////////////////////////////////////////////////////////////////
+
+# ~ 2 ~
 # import data into stats_stats
 ernskin.importDatatableAsCsv('stats_stats', statsDT)
