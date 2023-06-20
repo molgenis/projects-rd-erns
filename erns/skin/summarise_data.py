@@ -2,7 +2,7 @@
 # FILE: summarise_data.py
 # AUTHOR: David Ruvolo
 # CREATED: 2023-06-13
-# MODIFIED: 2023-06-16
+# MODIFIED: 2023-06-20
 # PURPOSE: summarise data in the registry and prep for dashboard
 # STATUS: stable
 # PACKAGES: NA
@@ -75,8 +75,8 @@ labels = [
   'Todler',
   'Kids',
   'Teenagers',
-  'Adults group 1',
-  'Adults group 2',
+  'Adults < 40',
+  'Adults < 60',
   'Elderly persons',
 ]
 
