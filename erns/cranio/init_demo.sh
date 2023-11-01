@@ -20,8 +20,8 @@ curl "${HOST}/api/graphql" \
   -d '{"query":"mutation{createSchema(name:\"CranioStats\",template:\"ERN_DASHBOARD\",includeDemoData:false){message}}"}'
   
 # ~ 3 ~
-# Creating a new schemas using the 7 starting institutions
-declare -a SCHEMA_IDS=("BE1" "CZ1" "DE1" "HU2" "IT2" "IT5" "NL3")
+# Creating a new schemas using the 7 starting institutions + Erasmus
+declare -a SCHEMA_IDS=("BE1" "CZ1" "DE1" "HU2" "IT2" "IT5" "NL1" "NL3")
 declare -a SCHEMA_NAMES=(
   "UZ Leuven"
   "University Hospital Motol"
@@ -29,6 +29,7 @@ declare -a SCHEMA_NAMES=(
   "Szent-Gyorgyi Albert Medical Center"
   "Fondazione A. Gemelli"
   "Ospedale San Gerardo Monza"
+  "Erasmus MC"
   "UMC Utrecht"
 )
 
