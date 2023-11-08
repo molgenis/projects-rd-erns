@@ -1,8 +1,8 @@
 #!/bin/sh
 
-HOST="...."
-USER_NAME="...."
-USER_PASS="...."
+HOST=""
+USER_NAME=""
+USER_PASS=""
 
 # ~ 1 ~
 # sign in and retrieve token for sending additional requests
@@ -13,7 +13,27 @@ TOKEN=$(curl -s "${HOST}/api/graphql" \
   | grep "token" | tr -d '"' | awk '{print $3}'
 )
 
+# //////////////////////////////////////
+
 # ~ 2 ~
+# Delete existing schemas
+declare -a SCHEMAS_TO_REMOVE=(
+  "catalogue-demo"
+  "CatalogueOntologies"
+  "pet store"
+)
+
+for SCHEMA in "${SCHEMAS_TO_REMOVE[@]}"
+do
+  curl -s "${HOST}/api/graphql" \
+    -H "x-molgenis-token:${TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{"query":"mutation{deleteSchema(name:\"'${SCHEMA}'\"){message}}"}'
+done
+
+# //////////////////////////////////////
+
+# ~ 3 ~
 # Create new schema from ERN_DASHBOARD: the schema name is hard coded into the vue apps
 curl "${HOST}/api/graphql" \
   -H "x-molgenis-token:${TOKEN}" \
@@ -25,29 +45,48 @@ curl -s "${HOST}/api/graphql" \
   -H "x-molgenis-token:${TOKEN}" \
   -d '{"query":"mutation{updateSchema(name:\"CranioStats\",description:\"Staging Tables for Dashboards\"){ message }}"}'
 
+
+# import data
+curl "${HOST}/${SCHEMA}/api/graphql" \
+  -H "Content-Type: multipart/form-data" \
+  -H "x-molgenis-token:${TOKEN}" \
+  -F "content=@erns/cranio/cranio_emx2.xlsx"
+
 # prepare payload for customising the menu
-PUBLIC_MENU='[{\\\"label\\\":\\\"Home\\\",\\\"href\\\":\\\"./cranio-public\\\",\\\"key\\\":\\\"ADmWCg\\\",\\\"submenu\\\":[],\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Tables\\\",\\\"href\\\":\\\"tables\\\",\\\"role\\\":\\\"Viewer\\\",\\\"key\\\":\\\"BKhvh4\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Schema\\\",\\\"href\\\":\\\"schema\\\",\\\"role\\\":\\\"Manager\\\",\\\"key\\\":\\\"kIhrXl\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Up/Download\\\",\\\"href\\\":\\\"updownload\\\",\\\"role\\\":\\\"Editor\\\",\\\"key\\\":\\\"kwDYFO\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Graphql\\\",\\\"href\\\":\\\"graphql-playground\\\",\\\"role\\\":\\\"Viewer\\\",\\\"key\\\":\\\"8zqR5w\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Settings\\\",\\\"href\\\":\\\"settings\\\",\\\"role\\\":\\\"Manager\\\",\\\"key\\\":\\\"IjJH9y\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Help\\\",\\\"href\\\":\\\"docs\\\",\\\"role\\\":\\\"Viewer\\\",\\\"key\\\":\\\"JtQRmJ\\\",\\\"submenu\\\":[]}]'
- 
-PROVIDER_MENU='[{\\\"label\\\":\\\"Home\\\",\\\"href\\\":\\\"./cranio-provider\\\",\\\"key\\\":\\\"WRsCIb\\\",\\\"submenu\\\":[],\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Tables\\\",\\\"href\\\":\\\"tables\\\",\\\"role\\\":\\\"Viewer\\\",\\\"key\\\":\\\"88rTRO\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Schema\\\",\\\"href\\\":\\\"schema\\\",\\\"role\\\":\\\"Manager\\\",\\\"key\\\":\\\"Na6I36\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Up/Download\\\",\\\"href\\\":\\\"updownload\\\",\\\"role\\\":\\\"Editor\\\",\\\"key\\\":\\\"5LQfAo\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Graphql\\\",\\\"href\\\":\\\"graphql-playground\\\",\\\"role\\\":\\\"Viewer\\\",\\\"key\\\":\\\"Z92JNU\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Settings\\\",\\\"href\\\":\\\"settings\\\",\\\"role\\\":\\\"Manager\\\",\\\"key\\\":\\\"p52VMF\\\",\\\"submenu\\\":[]},{\\\"label\\\":\\\"Help\\\",\\\"href\\\":\\\"docs\\\",\\\"role\\\":\\\"Viewer\\\",\\\"key\\\":\\\"BNvx4N\\\",\\\"submenu\\\":[]}]' 
-  
+PUBLIC_MENU='[{\\\"label\\\":\\\"Home\\\",\\\"href\\\":\\\"./cranio-public\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Tables\\\",\\\"href\\\":\\\"tables\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Schema\\\",\\\"href\\\":\\\"schema\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Up/Download\\\",\\\"href\\\":\\\"updownload\\\",\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"Graphql\\\",\\\"href\\\":\\\"graphql-playground\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Settings\\\",\\\"href\\\":\\\"settings\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Help\\\",\\\"href\\\":\\\"docs\\\",\\\"role\\\":\\\"Viewer\\\"}]'
+
 # update the navlinks
 curl -s "${HOST}/CranioStats/api/graphql" \
   -H "Content-Type: application/json" \
   -H "x-molgenis-token:${TOKEN}" \
   -d '{"query": "mutation{change(settings:[{key:\"menu\",value:\"'${PUBLIC_MENU}'\"}]){message}}"}'
 
+# //////////////////////////////////////
   
-# ~ 3 ~
+# ~ 4 ~
 # Creating a new schemas using the 7 starting institutions + Erasmus
 # create empty schema (replace with template later) and make the schema viewable as anonymous
-declare -a SCHEMA_IDS=("BE1" "CZ1" "DE1" "HU2" "IT2" "IT5" "NL1" "NL3")
+
+# set provider-level menu
+PROVIDER_MENU='[{\\\"label\\\":\\\"Home\\\",\\\"href\\\":\\\"./cranio-provider\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Tables\\\",\\\"href\\\":\\\"tables\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Schema\\\",\\\"href\\\":\\\"schema\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Up/Download\\\",\\\"href\\\":\\\"updownload\\\",\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"Graphql\\\",\\\"href\\\":\\\"graphql-playground\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Settings\\\",\\\"href\\\":\\\"settings\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Help\\\",\\\"href\\\":\\\"docs\\\",\\\"role\\\":\\\"Viewer\\\"}]'
+
+declare -a SCHEMA_IDS=(
+  "BE3"
+  "CZ1"
+  "DE1"
+  "HU1"
+  "IT4"
+  "IT6"
+  "NL2"
+  "NL4"
+)
 declare -a SCHEMA_NAMES=(
   "UZ Leuven"
-  "University Hospital Motol"
-  "Universitatsklinikum Charite"
-  "Szent-Gyorgyi Albert Medical Center"
-  "Fondazione A. Gemelli"
-  "Ospedale San Gerardo Monza"
+  "University Hospital Motol "
+  "Charité Universitätsmedizin Berlin"
+  "Szent-Györgyi Albert Medical Center, University of Szeged"
+  "Fondazione Policlinico Universitario A. Gemelli "
+  "San Gerardo Hospital"
   "Erasmus MC"
   "UMC Utrecht"
 )
@@ -62,6 +101,8 @@ do
     -H "Content-Type: application/json" \
     -H "x-molgenis-token:${TOKEN}" \
     -d '{"query":"mutation{createSchema(name:\"'${SCHEMA}'\"){ message }}"}'
+    
+  wait
 
   curl -s "${HOST}/api/graphql" \
     -H "Content-Type: application/json" \
