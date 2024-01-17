@@ -28,7 +28,7 @@ do
   curl -s "${HOST}/api/graphql" \
     -H "x-molgenis-token:${TOKEN}" \
     -H "Content-Type: application/json" \
-    -d '{"query":"mutation{deleteSchema(name:\"'${SCHEMA}'\"){message}}"}'
+    -d '{"query":"mutation{deleteSchema(id:\"'${SCHEMA}'\"){message}}"}'
 done
 
 # ////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ done
 curl "${HOST}/api/graphql" \
   -H "x-molgenis-token:${TOKEN}" \
   -H "Content-Type: application/json" \
-  -d '{"query":"mutation{createSchema(name:\"CranioStats\",template:\"ERN_DASHBOARD\"){message}}"}'
+  -d '{"query":"mutation{createSchema(name:\"CranioStats\",description:\"ERN CRANIO MASTER\",template:\"ERN_DASHBOARD\"){message}}"}'
 
 # import data
 curl "${HOST}/CranioStats/api/excel" \
@@ -47,7 +47,9 @@ curl "${HOST}/CranioStats/api/excel" \
   -F "file=@erns/cranio/cranio_emx2.xlsx"
 
 # prepare payload for customising the menu
-PUBLIC_MENU='[{\\\"label\\\":\\\"Home\\\",\\\"href\\\":\\\"./cranio-public\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Tables\\\",\\\"href\\\":\\\"tables\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Schema\\\",\\\"href\\\":\\\"schema\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Up/Download\\\",\\\"href\\\":\\\"updownload\\\",\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"Graphql\\\",\\\"href\\\":\\\"graphql-playground\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Settings\\\",\\\"href\\\":\\\"settings\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Help\\\",\\\"href\\\":\\\"docs\\\",\\\"role\\\":\\\"Viewer\\\"}]'
+
+# RECODE WITH PROPER ESCAPES
+PUBLIC_MENU='[{\\\"label\\\":\\\"Home\\\",\\\"href\\\":\\\"./cranio-public\\\",\\\"role\\\":\\\"Viewer\\\"} {\\\"label\\\":\\\"Patients\\\",\\\"href\\\":\\\"tables/#/Subject\\\",\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"Visit per workstream\\\",\\\"href\\\":\\\"\\\",\\\"submenu\\\":[{\\\"label\\\":\\\"CRANIOSYNOSTOSIS workstream\\\",\\\"href\\\":\\\"tables/#/Visits_synostosis\\\",\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"CLEFT workstream\\\",\\\"href\\\":\\\"tables/#/Visits_cleft\\\",\\\"role\\\":\\\"Editor\\\"}],\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"Tables\\\",\\\"href\\\":\\\"tables\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Schema\\\",\\\"href\\\":\\\"schema\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Up/Download\\\",\\\"href\\\":\\\"updownload\\\",\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"Graphql\\\",\\\"href\\\":\\\"graphql-playground\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Settings\\\",\\\"href\\\":\\\"settings\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Help\\\",\\\"href\\\":\\\"docs\\\",\\\"role\\\":\\\"Viewer\\\"}]'
 
 # update the navlinks
 curl -s "${HOST}/CranioStats/api/graphql" \
@@ -118,7 +120,7 @@ done
 curl -s "${HOST}/api/graphql" \
   -H "Content-Type: application/json" \
   -H "x-molgenis-token:${TOKEN}" \
-  -d '{"query":"mutation{updateSchema(name:\"CranioStats\",description:\"Staging Tables for Dashboards\"){ message }}"}'
+  -d '{"query":"mutation{updateSchema(name:\"CranioStats\",description:\"Master Schema for cranio-public\"){ message }}"}'
 
 INDEX=1
 for SCHEMA in "${SCHEMA_IDS[@]}"
@@ -127,6 +129,6 @@ do
   curl -s "${HOST}/api/graphql" \
     -H "Content-Type: application/json" \
     -H "x-molgenis-token:${TOKEN}" \
-    -d '{"query":"mutation{updateSchema(name:\"'${SCHEMA}'\",description:\"'${NAME}'\"){ message }}"}'
+    -d '{"query":"mutation{updateSchema(name:\"'${SCHEMA}'\",description:\"Database for '${NAME}'\"){ message }}"}'
   ((INDEX++))
 done
