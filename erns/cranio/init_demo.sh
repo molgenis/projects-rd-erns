@@ -67,25 +67,31 @@ curl -s "${HOST}/CranioStats/api/graphql" \
 PROVIDER_MENU='[{\\\"label\\\":\\\"Home\\\",\\\"href\\\":\\\"./cranio-provider\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Tables\\\",\\\"href\\\":\\\"tables\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Schema\\\",\\\"href\\\":\\\"schema\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Up/Download\\\",\\\"href\\\":\\\"updownload\\\",\\\"role\\\":\\\"Editor\\\"},{\\\"label\\\":\\\"Graphql\\\",\\\"href\\\":\\\"graphql-playground\\\",\\\"role\\\":\\\"Viewer\\\"},{\\\"label\\\":\\\"Settings\\\",\\\"href\\\":\\\"settings\\\",\\\"role\\\":\\\"Manager\\\"},{\\\"label\\\":\\\"Help\\\",\\\"href\\\":\\\"docs\\\",\\\"role\\\":\\\"Viewer\\\"}]'
 
 declare -a SCHEMA_IDS=(
+  "BE1"
   "BE3"
   "CZ1"
   "DE1"
   "HU1"
   "IT4"
   "IT6"
+  "LT1"
   "NL2"
   "NL4"
+  "NO2"
 )
 
 declare -a SCHEMA_NAMES=(
+  "Antwerp University Hospital"
   "UZ Leuven"
   "University Hospital Motol "
   "Charité Universitätsmedizin Berlin"
   "Szent-Györgyi Albert Medical Center, University of Szeged"
   "Fondazione Policlinico Universitario A. Gemelli "
   "San Gerardo Hospital"
+  "Vilnius University Hospital"
   "Erasmus MC"
   "UMC Utrecht"
+  "Oslo University Hospital"
 )
 
 INDEX=1
