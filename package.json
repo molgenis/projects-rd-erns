@@ -1,5 +1,5 @@
 {
-  "name": "molgenis-app-ern-dashboard",
+  "name": "projects-rd-erns",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/molgenis/molgenis-app-ern-dashboard.git",
@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "venv": "source ./venv/bin/activate",
-    "build:genturis": "python model/build.py model/profiles/ern_genturis.yaml",
-    "build:ithaca": "python model/build.py model/profiles/ern_ithaca.yaml"
+    "pip:upgrade": "pip-upgrade",
+    "pip:freeze": "rm requirements.txt && pip freeze >> requirements.txt"
   }
 }
