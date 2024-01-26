@@ -1,0 +1,98 @@
+{
+  "public": [
+    {
+        "label": "Home",
+        "href": "./cranio-public",
+        "role": "Viewer"
+    },
+    {
+      "label": "Tables",
+      "href": "tables",
+      "role": "Viewer"
+    },
+    {
+      "label": "Schema",
+      "href": "schema",
+      "role": "Manager"
+    },
+    {
+      "label": "Up/Download",
+      "href": "updownload",
+      "role": "Editor"
+    },
+    {
+      "label": "Graphql",
+      "href": "graphql-playground",
+      "role": "Editor"
+    },
+    {
+      "label": "Settings",
+      "href": "settings",
+      "role": "Manager"
+    },
+    {
+      "label": "Help",
+      "href": "docs",
+      "role": "Viewer"
+    }
+  ],
+  "provider": [
+    {
+      "label": "Home",
+      "href": "./cranio-public",
+      "role": "Viewer"
+    },
+    {
+      "label": "Patients",
+      "href": "tables/#/Subject",
+      "role": "Editor"
+    },
+    {
+      "label": "Visit per workstream",
+      "href": "",
+      "submenu": [
+        {
+          "label": "CRANIOSYNOSTOSIS workstream",
+          "href": "tables/#/Visits_synostosis",
+          "role": "Editor"
+        },
+        {
+          "label": "CLEFT workstream",
+          "href": "tables/#/Visits_cleft",
+          "role": "Editor"
+        }
+      ],
+      "role": "Editor"
+    },
+    {
+      "label": "Tables",
+      "href": "tables",
+      "role": "Viewer"
+    },
+    {
+      "label": "Schema",
+      "href": "schema",
+      "role": "Manager"
+    },
+    {
+      "label": "Up/Download",
+      "href": "updownload",
+      "role": "Editor"
+    },
+    {
+      "label": "Graphql",
+      "href": "graphql-playground",
+      "role": "Viewer"
+    },
+    {
+      "label": "Settings",
+      "href": "settings",
+      "role": "Manager"
+    },
+    {
+      "label": "Help",
+      "href": "docs",
+      "role": "Viewer"
+    }
+  ]
+}
