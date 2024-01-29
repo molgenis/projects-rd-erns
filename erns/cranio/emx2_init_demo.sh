@@ -1,12 +1,9 @@
 #!/bin/sh
+HOST=''
+USER_NAME=''
+USER_PASS=''
 
-HOST=""
-USER_NAME=""
-USER_PASS=""
 
-# ////////////////////////////////////////////////////////////////////////////
-
-# ~ 1 ~
 # sign in and retrieve token for sending additional requests and clean up molgenis instance
 # NOTE: Set username and password
 TOKEN=$(curl -s "${HOST}/api/graphql" \
@@ -31,14 +28,14 @@ do
     -d '{"query":"mutation{deleteSchema(id:\"'${SCHEMA}'\"){message}}"}'
 done
 
-# ////////////////////////////////////////////////////////////////////////////
 
-# ~ 3 ~
+
 # Create new schema from ERN_DASHBOARD: the schema name is hard coded into the vue apps
 curl "${HOST}/api/graphql" \
   -H "x-molgenis-token:${TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"query":"mutation{createSchema(name:\"CranioStats\",description:\"ERN CRANIO MASTER\",template:\"ERN_DASHBOARD\"){message}}"}'
+
 
 # import data
 curl "${HOST}/CranioStats/api/excel" \
@@ -57,9 +54,8 @@ curl -s "${HOST}/CranioStats/api/graphql" \
   -H "x-molgenis-token:${TOKEN}" \
   -d '{"query": "mutation{change(settings:[{key:\"menu\",value:\"'${PUBLIC_MENU}'\"}]){message}}"}'
 
-# ////////////////////////////////////////////////////////////////////////////
-  
-# ~ 4 ~
+
+
 # Creating a new schemas using the 7 starting institutions + Erasmus
 # create empty schema (replace with template later) and make the schema viewable as anonymous
 
@@ -86,7 +82,7 @@ declare -a SCHEMA_NAMES=(
   "University Hospital Motol "
   "Charité Universitätsmedizin Berlin"
   "Szent-Györgyi Albert Medical Center, University of Szeged"
-  "Fondazione Policlinico Universitario A. Gemelli "
+  "Fondazione Policlinico Universitario A. Gemelli"
   "San Gerardo Hospital"
   "Vilnius University Hospital"
   "Erasmus MC"
@@ -118,7 +114,6 @@ do
   ((INDEX++))
 done
 
-# ////////////////////////////////////////////////////////////////////////////
 
 # ~ 99 ~ 
 # Update Schema Descriptions
