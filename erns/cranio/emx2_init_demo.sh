@@ -82,7 +82,7 @@ declare -a SCHEMA_NAMES=(
   "University Hospital Motol "
   "Charité Universitätsmedizin Berlin"
   "Szent-Györgyi Albert Medical Center, University of Szeged"
-  "Fondazione Policlinico Universitario A. Gemelli "
+  "Fondazione Policlinico Universitario A. Gemelli"
   "San Gerardo Hospital"
   "Vilnius University Hospital"
   "Erasmus MC"
