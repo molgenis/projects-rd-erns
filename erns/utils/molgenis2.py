@@ -1,13 +1,13 @@
-# '////////////////////////////////////////////////////////////////////////////
-# ' FILE: molgenis2.py
-# ' AUTHOR: David Ruvolo
-# ' CREATED: 2022-07-28
-# ' MODIFIED: 2022-11-10
-# ' PURPOSE: molgenis.client extensions for DataTable
-# ' STATUS: stable
-# ' PACKAGES: molgenis-py-client >= 2.4.0
-# ' COMMENTS: NA
-# '////////////////////////////////////////////////////////////////////////////
+"""Molgenis EMX1 API Client
+# FILE: molgenis2.py
+# AUTHOR: David Ruvolo
+# CREATED: 2022-07-28
+# MODIFIED: 2022-11-10
+# PURPOSE: molgenis.client extensions for DataTable
+# STATUS: stable
+# PACKAGES: molgenis-py-client >= 2.4.0
+# COMMENTS: NA
+"""
 
 from os.path import abspath, getsize
 import tempfile
