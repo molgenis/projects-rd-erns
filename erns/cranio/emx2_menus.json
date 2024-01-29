@@ -39,7 +39,7 @@
   "provider": [
     {
       "label": "Home",
-      "href": "./cranio-public",
+      "href": "./cranio-provider",
       "role": "Viewer"
     },
     {
