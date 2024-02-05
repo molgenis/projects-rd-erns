@@ -79,6 +79,11 @@ new_change_setting_query () {
     echo $query
 }
 
+random_key () {
+  local length=${1:-12}
+  echo "$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w $length | head -n 1 )"
+}
+
 # ////////////////////////////////////////////////////////////////////////////
 
 
@@ -111,7 +116,6 @@ do
         -d "$(jq -c -n --arg query "$delete_schema_gql" '{"query": $query}')"
 done
 
-  
 # //////////////////////////////////////
 
 # init primary schema - load menu, change membership, add description
@@ -129,7 +133,8 @@ curl "${emx2_host}/api/graphql" \
 
 
 # update the menu
-public_menu=$(jq '.public | tostring' erns/cranio/emx2_menus.json)
+
+public_menu=$(jq '.public | map(. + {key: "'$(random_key 7)'"}) | tostring' erns/cranio/emx2_menus.json)
 set_menu_gql=$(new_change_setting_query "menu" $public_menu)
 menu_payload="$(jq -c -n --arg query "$set_menu_gql" '{"query": $query}')"
 echo $menu_payload
@@ -167,7 +172,7 @@ curl "${emx2_host}/CranioStats/api/excel" \
 # create schemas for organisations
 
 # create payload for menu
-provider_menu=$(jq '.provider | tostring' erns/cranio/emx2_menus.json)
+provider_menu=$(jq '.provider | map(. + {key: "'$(random_key 7)'"}) | tostring' erns/cranio/emx2_menus.json)
 org_menu_gql=$(new_change_setting_query "menu" $provider_menu)
 org_menu_payload=$(jq -c -n --arg query "$org_menu_gql" '{"query": $query}')
 
