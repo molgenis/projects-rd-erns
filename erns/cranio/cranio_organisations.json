@@ -1,0 +1,166 @@
+[
+    {
+        "name": "University Hospital Salzburg, Austria",
+        "schemaName": "AT1"
+    },
+    {
+        "name": "Antwerp University Hospital",
+        "schemaName": "BE1"
+    },
+    {
+        "name": "UZ Gent",
+        "schemaName": "BE2"
+    },
+    {
+        "name": "UZ Leuven",
+        "schemaName": "BE3"
+    },
+    {
+        "name": "University Hospital Motol ",
+        "schemaName": "CZ1"
+    },
+    {
+        "name": "Aarhus University Hospital",
+        "schemaName": "DK1"
+    },
+    {
+        "name": "Rigshospitalet, Coperhagen University Hospital ",
+        "schemaName": "DK2"
+    },
+    {
+        "name": "Helsinki University Hospital",
+        "schemaName": "FI1"
+    },
+    {
+        "name": "Hôpital Universitaire Necker Enfants-Malades",
+        "schemaName": "FR1"
+    },
+    {
+        "name": "Hopitaux universitaires de Strasbourg ",
+        "schemaName": "FR2"
+    },
+    {
+        "name": "Hospices Civils de Lyon",
+        "schemaName": "FR3"
+    },
+    {
+        "name": "Charité Universitätsmedizin Berlin",
+        "schemaName": "DE1"
+    },
+    {
+        "name": "Universitätsklinikum Tübingen",
+        "schemaName": "DE2"
+    },
+    {
+        "name": "Szent-Györgyi Albert Medical Center, University of Szeged",
+        "schemaName": "HU1"
+    },
+    {
+        "name": "University of Pecs",
+        "schemaName": "HU2"
+    },
+    {
+        "name": "Childrens Health Ireland at Temple Street",
+        "schemaName": "IE1"
+    },
+    {
+        "name": "AOP University of Padua ",
+        "schemaName": "IT1"
+    },
+    {
+        "name": "AOU Meyer di Firenze",
+        "schemaName": "IT2"
+    },
+    {
+        "name": "Fondazione Istituto Neurologico C.Besta ",
+        "schemaName": "IT3"
+    },
+    {
+        "name": "Fondazione Policlinico Universitario A. Gemelli ",
+        "schemaName": "IT4"
+    },
+    {
+        "name": "San Bortolo Hospital",
+        "schemaName": "IT5"
+    },
+    {
+        "name": "San Gerardo Hospital",
+        "schemaName": "IT6"
+    },
+    {
+        "name": "Smile House - San Paolo Hospital ",
+        "schemaName": "IT7"
+    },
+    {
+        "name": "Riga Cleft Lip and Palate Centre, Latvia ",
+        "schemaName": "LV1"
+    },
+    {
+        "name": "Vilnius University Hospital Santaros Klinikos, Ear, Nose and Throat Center",
+        "schemaName": "LT1"
+    },
+    {
+        "name": "Mater Dei Hospital (MDH)",
+        "schemaName": "MT1"
+    },
+    {
+        "name": "Amsterdam University Medical Centres",
+        "schemaName": "NL1"
+    },
+    {
+        "name": "Erasmus MC",
+        "schemaName": "NL2"
+    },
+    {
+        "name": "Radboud MC",
+        "schemaName": "NL3"
+    },
+    {
+        "name": "UMC Utrecht",
+        "schemaName": "NL4"
+    },
+    {
+        "name": "Haukeland University Hospital Helse Bergen HF",
+        "schemaName": "NO1"
+    },
+    {
+        "name": "Oslo University Hospital",
+        "schemaName": "NO2"
+    },
+    {
+        "name": "Regional specialised children's hospital, Olsztyn. Poland ",
+        "schemaName": "PL1"
+    },
+    {
+        "name": "Hospital de Santa Maria – Centro Hospitalar Lisboa Norte",
+        "schemaName": "PT1"
+    },
+    {
+        "name": "University Medical Centre Ljubljana, Slovenia",
+        "schemaName": "SI1"
+    },
+    {
+        "name": "Hospital 12 de Octubre ",
+        "schemaName": "ES1"
+    },
+    {
+        "name": "Hospital de Sant Joan de Déu",
+        "schemaName": "ES2"
+    },
+    {
+        "name": "Vall d'Hebron ",
+        "schemaName": "ES3"
+    },
+    {
+        "name": "Karolinska University Hospital ",
+        "schemaName": "SE1"
+    },
+    {
+        "name": "Sahlgrenska University Hospital ",
+        "schemaName": "SE2"
+    },
+    {
+        "name": "Uppsala University Hospital ",
+        "schemaName": "SE3"
+    }
+]

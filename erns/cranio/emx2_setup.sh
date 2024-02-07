@@ -194,14 +194,16 @@ curl "${emx2_host}/CranioStats/api/excel" \
 
 # //////////////////////////////////////
 
-# create schemas for organisations
 
-organisations_json=erns/cranio/emx2_setup_orgs.json
-jq -c '.organisations[]' $organisations_json | while read row; do
-    org_id=$(jq '.id' <<< $row | xargs)
+# refresh organisations and create schemas
+
+$(python erns/cranio/cranio_prep_organisations.py)
+
+organisations_json=erns/cranio/cranio_organisations.json
+jq -c '.[]' $organisations_json | while read row; do
+    org_id=$(jq '.schemaName' <<< $row | xargs)
     org_name=$(jq '.name' <<< $row | xargs)
     echo "Preparing schema for $org_name ($org_id)...."
-    
   
     org_create_schema=$(new_create_schema_query $org_id $org_name)
     org_update_schema=$(new_update_schema_query $org_id $org_name)
