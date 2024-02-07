@@ -79,6 +79,31 @@ new_change_setting_query () {
     echo $query
 }
 
+new_save_query () {
+  local table=$1
+  local data=$2
+  query='mutation {
+    save ('$table': '$data') {
+      status
+      message
+    }
+  }'
+  echo $query
+}
+
+new_update_query () {
+  local table=$1
+  local data=$2
+  query='mutation {
+    update ('$table': '$data') {
+      status
+      message
+    }
+  }'
+  echo $query
+}
+
+
 random_key () {
   local length=${1:-12}
   echo "$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w $length | head -n 1 )"
@@ -171,16 +196,12 @@ curl "${emx2_host}/CranioStats/api/excel" \
 
 # create schemas for organisations
 
-# create payload for menu
-provider_menu=$(jq '.provider | map(. + {key: "'$(random_key 7)'"}) | tostring' erns/cranio/emx2_menus.json)
-org_menu_gql=$(new_change_setting_query "menu" $provider_menu)
-org_menu_payload=$(jq -c -n --arg query "$org_menu_gql" '{"query": $query}')
-
 organisations_json=erns/cranio/emx2_setup_orgs.json
 jq -c '.organisations[]' $organisations_json | while read row; do
     org_id=$(jq '.id' <<< $row | xargs)
     org_name=$(jq '.name' <<< $row | xargs)
     echo "Preparing schema for $org_name ($org_id)...."
+    
   
     org_create_schema=$(new_create_schema_query $org_id $org_name)
     org_update_schema=$(new_update_schema_query $org_id $org_name)
@@ -194,6 +215,10 @@ jq -c '.organisations[]' $organisations_json | while read row; do
     echo "\tSchema Created: $create_response"
     if [ "$create_response"=="SUCCESS" ]
     then
+        provider_menu=$(jq '.provider | map(. + {key: "'$(random_key 7)'"}) | tostring' erns/cranio/emx2_menus.json)
+        org_menu_gql=$(new_change_setting_query "menu" $provider_menu)
+        org_menu_payload=$(jq -c -n --arg query "$org_menu_gql" '{"query": $query}')
+        
         resp_org_menu=$(curl -s "$emx2_host/$org_id/api/graphql" \
             -H "Content-Type: application/json" \
             -H "x-molgenis-token:${api_token}" \
