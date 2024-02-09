@@ -103,7 +103,6 @@ new_update_query () {
   echo $query
 }
 
-
 random_key () {
   local length=${1:-12}
   echo "$(cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w $length | head -n 1 )"
@@ -113,7 +112,6 @@ random_key () {
 
 
 # sign in and get token
-
 signin_gql=$(new_signin_query $user_email $user_password)
 api_token=$(curl "${emx2_host}/api/graphql" \
     -H "Content-Type: application/json" \
@@ -186,11 +184,12 @@ curl "${emx2_host}/api/graphql" \
     -d "$(jq -c -n --arg query "$update_desc_gql" '{"query": $query}')"
     
     
-# import data
-curl "${emx2_host}/CranioStats/api/excel" \
+# prepare archive and import
+# cd erns/cranio/imports && zip -r ../ern_cranio.zip * && cd ../../../
+curl "${emx2_host}/CranioStats/api/zip" \
   -H "Content-Type: multipart/form-data" \
   -H "x-molgenis-token:${api_token}" \
-  -F "file=@erns/cranio/cranio_emx2.xlsx"
+  -F "file=@erns/cranio/ern_cranio.zip"
 
 # //////////////////////////////////////
 
