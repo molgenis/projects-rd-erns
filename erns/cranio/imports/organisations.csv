@@ -1,22 +1,22 @@
-name,codesystem,code,ontologyTermURI,city,country,latitude,longitude,organisationType,hasSchema,schemaName,image
+﻿name,codesystem,code,ontologyTermURI,city,country,latitude,longitude,organisationType,hasSchema,schemaName,image
 Aarhus University Hospital,ROR,040r8fr65,https://ror.org/040r8fr65,Aarhus,Denmark,56.170313,10.206476,affiliated partner,,DK1,aarhus-university-hospital
 Amsterdam University Medical Centres,ROR,05grdyy37,https://ror.org/05grdyy37,Amsterdam,Netherlands,52.37403,4.88969,full member,,NL1,amsterdam-university-medical-centres
 Antwerp University Hospital,ROR,01hwamj44,https://ror.org/01hwamj44,Antwerp,Belgium,51.22047,4.40026,full member,,BE1,antwerp-university-hospital
 AOP University of Padua ,ROR,04bhk6583,https://ror.org/04bhk6583,Padova,Italy,45.404314,11.887474,full member,,IT1,aop-university-of-padua
 AOU Meyer di Firenze,ROR,01n2xwm51,https://ror.org/01n2xwm51,Florence,Italy,43.810527,11.252438,full member,,IT2,aou-meyer-di-firenze
-Charit� Universit�tsmedizin Berlin,ROR,001w7jn25,https://ror.org/001w7jn25,Berlin,Germany,52.52437,13.41053,full member,TRUE,DE1,charite-universitatsmedizin-berlin
+Charité Universitätsmedizin Berlin,ROR,001w7jn25,https://ror.org/001w7jn25,Berlin,Germany,52.52437,13.41053,full member,TRUE,DE1,charite-universitatsmedizin-berlin
 Childrens Health Ireland at Temple Street,ROR,0527gjc91,https://ror.org/0527gjc91,Dublin,Ireland,53.357858,-6.261981,full member,,IE1,childrens-health-ireland-at-temple-street
-Erasmus MC,ROR,018906e22,https://ror.org/018906e22,Rotterdam,Netherlands,51.9225,4.47917,full member,TRUE,NL2,erasmus-mc
-Fondazione�Istituto Neurologico C.Besta ,ROR,05rbx8m02,https://ror.org/05rbx8m02,Milan,Italy,45.477186,9.230385,full member,,IT3,fondazione-istituto-neurologico-c-besta
+Erasmus MC,ROR,1.89E+26,https://ror.org/018906e22,Rotterdam,Netherlands,51.9225,4.47917,full member,TRUE,NL2,erasmus-mc
+Fondazione Istituto Neurologico C.Besta ,ROR,05rbx8m02,https://ror.org/05rbx8m02,Milan,Italy,45.477186,9.230385,full member,,IT3,fondazione-istituto-neurologico-c-besta
 Fondazione Policlinico Universitario A. Gemelli ,ROR,00rg70c39,https://ror.org/00rg70c39,Rome,Italy,41.89193,12.51133,full member,TRUE,IT4,fondazione-a-gemelli
 Haukeland University Hospital Helse Bergen HF,ROR,03np4e098,https://ror.org/03np4e098,Bergen,Norway,60.39299,5.32415,full member,,NO1,haukeland-university-hospital
 Helsinki University Hospital,ROR,02e8hzf44,https://ror.org/02e8hzf44,Helsinki,Finland,60.188611,24.905278,full member,,FI1,helsinki-univeristy-hospital
-H�pital Universitaire Necker Enfants-Malades,ROR,05tr67282,https://ror.org/05tr67282,Paris,France,48.85341,2.3488,full member,,FR1,hopital-universitaire-necker-enfants-maldes
+Hópital Universitaire Necker Enfants-Malades,ROR,05tr67282,https://ror.org/05tr67282,Paris,France,48.85341,2.3488,full member,,FR1,hopital-universitaire-necker-enfants-maldes
 Hopitaux universitaires de Strasbourg ,ROR,04bckew43,https://ror.org/04bckew43,Strasbourg,France,48.58392,7.74553,full member,,FR2,hopitaux-universitaires-de-strasbourg
 Hospices Civils de Lyon,ROR,01502ca60,https://ror.org/01502ca60,Lyon,France,45.74846,4.84671,full member,,FR3,hospices-civils-de-lyon
 Hospital 12 de Octubre ,ROR,00qyh5r35,https://ror.org/00qyh5r35,Madrid,Spain,40.4165,-3.70256,full member,,ES1,hospital-12-de-octubre
-Hospital de Sant Joan de D�u,ROR,001jx2139,https://ror.org/001jx2139,Barcelona,Spain,41.38879,2.15899,full member,,ES2,hospital-de-sant-joan-de-deu
-Hospital de Santa Maria � Centro Hospitalar Lisboa Norte,ROR,020sr6z07,https://ror.org/020sr6z07,Lisbon,Portugal,38.748446,-9.160609,full member,,PT1,hospital-de-santa-maria
+Hospital de Sant Joan de Déu,ROR,001jx2139,https://ror.org/001jx2139,Barcelona,Spain,41.38879,2.15899,full member,,ES2,hospital-de-sant-joan-de-deu
+Hospital de Santa Maria - Centro Hospitalar Lisboa Norte,ROR,020sr6z07,https://ror.org/020sr6z07,Lisbon,Portugal,38.748446,-9.160609,full member,,PT1,hospital-de-santa-maria
 Karolinska University Hospital ,ROR,00m8d6786,https://ror.org/00m8d6786,Stockholm,Sweden,59.32938,18.06871,full member,,SE1,karolinska-university-hospital
 Mater Dei Hospital (MDH),ROR,05a01hn31,https://ror.org/05a01hn31,Imsida,Malta,35.901828,14.476744,affiliated partner,,MT1,mater-dei-hospital
 Oslo University Hospital,ROR,00j9c2840,https://ror.org/00j9c2840,Oslo,Norway,59.9486,10.7153,full member,,NO2,oslo-university-hospital
@@ -28,14 +28,14 @@ Sahlgrenska University Hospital ,ROR,04vgqjj36,https://ror.org/04vgqjj36,Gothenb
 San Bortolo Hospital,ROR,05wd86d64,https://ror.org/05wd86d64,Vicenza,Italy,45.555954,11.546532,full member,,IT5,san-bortolo-hospital
 San Gerardo Hospital,ROR,01xf83457,https://ror.org/01xf83457,Monza,Italy,45.603031,9.258782,full member,TRUE,IT6,san-gerardo-hospital
 Smile House - San Paolo Hospital ,ROR,0026m8b31,https://ror.org/0026m8b31,Milan,Italy,45.434808,9.159816,full member,,IT7,smile-house-san-paolo-hospital
-"Szent-Gy�rgyi Albert Medical Center, University of Szeged",ROR,01pnej532,https://ror.org/01pnej532,Szeged,Hungary,46.253,20.14824,full member,TRUE,HU1,szent-medical-center
+"Szent-Györgyi Albert Medical Center, University of Szeged",ROR,01pnej532,https://ror.org/01pnej532,Szeged,Hungary,46.253,20.14824,full member,TRUE,HU1,szent-medical-center
 UMC Utrecht,ROR,0575yy874,https://ror.org/0575yy874,Utrecht,Netherlands,52.09083,5.12222,full member,TRUE,NL4,umc-utrecht
-Universit�tsklinikum T�bingen,ROR,00pjgxh97,https://ror.org/00pjgxh97,T�bingen,Germany,48.52266,9.05222,full member,,DE2,university-hospital-tubingen
+Universitätsklinikum Tübingen,ROR,00pjgxh97,https://ror.org/00pjgxh97,T�bingen,Germany,48.52266,9.05222,full member,,DE2,university-hospital-tubingen
 University Hospital Motol ,ROR,0125yxn03,https://ror.org/0125yxn03,Prague,Czechia,50.072869,14.340355,full member,TRUE,CZ1,university-hospital-motol
 University Hospital Salzburg,ROR,05gs8cd61,https://ror.org/05gs8cd61,Salzburg,Austria,47.79941,13.04399,full member,,AT1,university-hospital-salzburg
 University Medical Centre Ljubljana,ROR,01nr6fy72,https://ror.org/01nr6fy72,Ljubljana,Slovenia,46.053689,14.521233,affiliated partner,,SI1,university-medical-centre-ljubljana
 University of Pecs,ROR,037b5pv06,https://ror.org/037b5pv06,P�cs,Hungary,46.0725,18.23083,full member,,HU2,university-of-pecs
-Uppsala University Hospital ,ROR,01apvbh93,https://ror.org/01apvbh93,Uppsala,Sweden,59.847222,17.640278,full member,,SE3,uppsal-university-hospital
+Uppsala University Hospital ,ROR,01apvbh93,https://ror.org/01apvbh93,Uppsala,Sweden,59.847222,17.640278,full member,,SE3,uppsala-university-hospital
 UZ Gent,ROR,00xmkp704,https://ror.org/00xmkp704,Gent,Belgium,51.025171,3.725213,full member,,BE2,uz-gent
 UZ Leuven,ROR,0424bsv16,https://ror.org/0424bsv16,Leuven,Belgium,50.87959,4.70093,full member,TRUE,BE3,uz-leuven
 Vall d'Hebron ,ROR,03ba28x55,https://ror.org/03ba28x55,Barcelona,Spain,41.428083,2.142278,full member,,ES3,vall-dhebron
