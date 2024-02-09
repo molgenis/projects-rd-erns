@@ -1,0 +1,42 @@
+organisation,providerIdentifier,hasSubmittedData
+University Hospital Salzburg,AT1,FALSE
+Antwerp University Hospital,BE1,FALSE
+UZ Gent,BE2,FALSE
+UZ Leuven,BE3,FALSE
+University Hospital Motol ,CZ1,FALSE
+Charité Universitätsmedizin Berlin,DE1,FALSE
+Universitätsklinikum Tübingen,DE2,FALSE
+Aarhus University Hospital,DK1,FALSE
+"Rigshospitalet, Coperhagen University Hospital ",DK2,FALSE
+Hospital 12 de Octubre ,ES1,FALSE
+Hospital de Sant Joan de Déu,ES2,FALSE
+Vall d'Hebron ,ES3,FALSE
+Helsinki University Hospital,FI1,FALSE
+Hôpital Universitaire Necker Enfants-Malades,FR1,FALSE
+Hopitaux universitaires de Strasbourg ,FR2,FALSE
+Hospices Civils de Lyon,FR3,FALSE
+"Szent-Györgyi Albert Medical Center, University of Szeged",HU1,FALSE
+University of Pecs,HU2,FALSE
+Childrens Health Ireland at Temple Street,IE1,FALSE
+AOP University of Padua ,IT1,FALSE
+AOU Meyer di Firenze,IT2,FALSE
+Fondazione Istituto Neurologico C.Besta ,IT3,FALSE
+Fondazione Policlinico Universitario A. Gemelli ,IT4,FALSE
+San Bortolo Hospital,IT5,FALSE
+San Gerardo Hospital,IT6,FALSE
+Smile House - San Paolo Hospital ,IT7,FALSE
+"Vilnius University Hospital Santaros Klinikos, Ear, Nose and Throat Center",LT1,FALSE
+"Riga Cleft Lip and Palate Centre, Latvia ",LV1,FALSE
+Mater Dei Hospital (MDH),MT1,FALSE
+Amsterdam University Medical Centres,NL1,FALSE
+Erasmus MC,NL2,FALSE
+Radboud MC,NL3,FALSE
+UMC Utrecht,NL4,FALSE
+Haukeland University Hospital Helse Bergen HF,NO1,FALSE
+Oslo University Hospital,NO2,FALSE
+"Regional specialised children's hospital, Olsztyn. Poland ",PL1,FALSE
+Hospital de Santa Maria – Centro Hospitalar Lisboa Norte,PT1,FALSE
+Karolinska University Hospital ,SE1,FALSE
+Sahlgrenska University Hospital ,SE2,FALSE
+Uppsala University Hospital ,SE3,FALSE
+University Medical Centre Ljubljana,SI1,FALSE
