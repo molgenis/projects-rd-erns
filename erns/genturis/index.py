@@ -1,19 +1,18 @@
-#///////////////////////////////////////////////////////////////////////////////
-# FILE: index.py
-# AUTHOR: David Ruvolo
-# CREATED: 2022-12-02
-# MODIFIED: 2022-12-02
-# PURPOSE: misc script for genturis-registry
-# STATUS: stable
-# PACKAGES: **see below**
-# COMMENTS: NA
-#///////////////////////////////////////////////////////////////////////////////
+"""Manage the GENTURIS script
+FILE: index.py
+AUTHOR: David Ruvolo
+CREATED: 2022-12-02
+MODIFIED: 2022-12-02
+PURPOSE: misc script for genturis-registry
+STATUS: stable
+PACKAGES: **see below**
+COMMENTS: NA
+"""
 
-from erns.utils.molgenis2 import Molgenis
-from dotenv import load_dotenv
 from os import environ
-import pandas as pd
 from datatable import dt
+from dotenv import load_dotenv
+from erns.utils.molgenis2 import Molgenis
 load_dotenv()
 
 genturisPROD = Molgenis(environ['GENTURIS_PROD_HOST'])
@@ -36,21 +35,22 @@ genturisACC.login(environ['GENTURIS_ACC_USR'], environ['GENTURIS_ACC_PWD'])
 providers = dt.Frame(genturisPROD.get('ernstats_dataproviders'))
 del providers['_href']
 
-genturisACC.importDatatableAsCsv('ernstats_dataproviders',providers)
+genturisACC.import_dt('ernstats_dataproviders', providers)
 
 # move stats dataset between servers
 stats = dt.Frame(genturisPROD.get('ernstats_stats'))
 del stats['_href']
 # genturisACC.delete('ernstats_stats')
-genturisACC.importDatatableAsCsv('ernstats_stats', stats)
+genturisACC.import_dt('ernstats_stats', stats)
 
 # genturisPROD.logout()
 # genturisACC.logout()
 
-#///////////////////////////////////////
+# ///////////////////////////////////////
 
-# import files
-from os import path
+# import files -- save file id and run the command below in a terminal
+genturisPROD.import_file(file='ERN_GENTURIS_User_Manual.pdf')
 
-
-genturisPROD.importFile(file='ERN GENTURIS newsletter - special edition GENTURIS registry - June 2023.pdf')
+# give user permissions
+# mcmd config set host
+# mcmd give anonymous read --package sys_FileMeta --entity <FILE_ID>
