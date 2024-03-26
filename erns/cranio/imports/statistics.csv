@@ -1,9 +1,9 @@
-id,title,label,value,valueOrder,component,description
-patients-summary-group-1,,Craniosynostosis,0.3,0,patients-by-workstream,disease group: 1
-patients-summary-group-3,,ENT disorders,0.28,2,patients-by-workstream,disease group: 3
-patients-summary-group-2,,Cleft lip/palate,0.2,1,patients-by-workstream,disease group: 2
-patients-sex-male,,Male,31,1,patients-sex-at-birth,
-patients-sex-undetermined,,Undetermined,12,2,patients-sex-at-birth,
-patients-sex-female,,Female,57,0,patients-sex-at-birth,
-patients-summary-group-5,,Other craniofacial anomalies,0.1,5,patients-by-workstream,disease group: 5
-patients-summary-group-4,,Orodental anomalies,0.12,4,patients-by-workstream,disease group: 4
+id,label,value,valueOrder,component,description
+patients-summary-group-1,Craniosynostosis,0.3,0,patients-by-workstream,disease group: 1
+patients-summary-group-3,ENT disorders,0.28,2,patients-by-workstream,disease group: 3
+patients-summary-group-2,Cleft lip/palate,0.2,1,patients-by-workstream,disease group: 2
+patients-sex-male,Male,31,1,patients-sex-at-birth,
+patients-sex-undetermined,Undetermined,12,2,patients-sex-at-birth,
+patients-sex-female,Female,57,0,patients-sex-at-birth,
+patients-summary-group-5,Other craniofacial anomalies,0.1,5,patients-by-workstream,disease group: 5
+patients-summary-group-4,Orodental anomalies,0.12,4,patients-by-workstream,disease group: 4
