@@ -2,7 +2,7 @@
 emx2_host=''
 user_email=''
 user_password=''
-primary_schema='CranioStats'
+primary_schema=''
 
 # ////////////////////////////////////////////////////////////////////////////
 
@@ -111,6 +111,7 @@ random_key () {
 # ////////////////////////////////////////////////////////////////////////////
 
 
+
 # sign in and get token
 signin_gql=$(new_signin_query $user_email $user_password)
 api_token=$(curl "${emx2_host}/api/graphql" \
@@ -148,7 +149,7 @@ curl "${emx2_host}/api/graphql" \
     -H "Content-Type: application/json" \
     -H "x-molgenis-token:${api_token}" \
     -d "$(jq -c -n --arg query 'mutation {
-        createSchema (name: "CranioStats", description: "CRANIO Stats", template: "ERN_DASHBOARD") {
+        createSchema (name: "'${primary_schema}'", description: "CRANIO Stats", template: "ERN_DASHBOARD") {
             status
             message
         }
@@ -186,7 +187,7 @@ curl "${emx2_host}/api/graphql" \
     
 # prepare archive and import
 # cd erns/cranio/imports && zip -r ../ern_cranio.zip * && cd ../../../
-curl "${emx2_host}/CranioStats/api/zip" \
+curl "${emx2_host}/${primary_schema}/api/zip" \
   -H "Content-Type: multipart/form-data" \
   -H "x-molgenis-token:${api_token}" \
   -F "file=@erns/cranio/ern_cranio.zip"
@@ -216,6 +217,16 @@ jq -c '.[]' $organisations_json | while read row; do
     echo "\tSchema Created: $create_response"
     if [ "$create_response"=="SUCCESS" ]
     then
+    
+        link_schema_gql=$(new_change_setting_query "CRANIO_PUBLIC_SCHEMA" $primary_schema)
+        link_schema_payload=$(jq -c -n --arg query "$link_schema_gql" '{"query": $query}')
+        resp_link_schema=$(curl -s "$emx2_host/$org_id/api/graphql" \
+            -H "Content-Type: application/json" \
+            -H "x-molgenis-token:${api_token}" \
+            -d $link_schema_payload)
+        link_schema_response=$(jq '.data.change.status' <<< $resp_link_schema | xargs)
+        echo "\tAdd link to CRANIO_PUBLIC: $link_schema_response"
+    
         provider_menu=$(jq '.provider | map(. + {key: "'$(random_key 7)'"}) | tostring' erns/cranio/emx2_menus.json)
         org_menu_gql=$(new_change_setting_query "menu" $provider_menu)
         org_menu_payload=$(jq -c -n --arg query "$org_menu_gql" '{"query": $query}')
