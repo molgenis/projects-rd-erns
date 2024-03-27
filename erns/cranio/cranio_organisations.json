@@ -12,7 +12,7 @@
         "schemaName": "BE1"
     },
     {
-        "name": "AOP University of Padua ",
+        "name": "AOP University of Padua",
         "schemaName": "IT1"
     },
     {
@@ -32,11 +32,11 @@
         "schemaName": "NL2"
     },
     {
-        "name": "Fondazione Istituto Neurologico C.Besta ",
+        "name": "Fondazione Istituto Neurologico C.Besta",
         "schemaName": "IT3"
     },
     {
-        "name": "Fondazione Policlinico Universitario A. Gemelli ",
+        "name": "Fondazione Policlinico Universitario A. Gemelli",
         "schemaName": "IT4"
     },
     {
@@ -52,7 +52,7 @@
         "schemaName": "FR1"
     },
     {
-        "name": "Hopitaux universitaires de Strasbourg ",
+        "name": "Hopitaux universitaires de Strasbourg",
         "schemaName": "FR2"
     },
     {
@@ -60,7 +60,7 @@
         "schemaName": "FR3"
     },
     {
-        "name": "Hospital 12 de Octubre ",
+        "name": "Hospital 12 de Octubre",
         "schemaName": "ES1"
     },
     {
@@ -68,15 +68,15 @@
         "schemaName": "ES2"
     },
     {
-        "name": "Hospital de Santa Maria - Centro Hospitalar Lisboa Norte",
+        "name": "Hospital de Santa Maria, Centro Hospitalar Lisboa Norte",
         "schemaName": "PT1"
     },
     {
-        "name": "Karolinska University Hospital ",
+        "name": "Karolinska University Hospital",
         "schemaName": "SE1"
     },
     {
-        "name": "Mater Dei Hospital (MDH)",
+        "name": "Mater Dei Hospital",
         "schemaName": "MT1"
     },
     {
@@ -88,19 +88,19 @@
         "schemaName": "NL3"
     },
     {
-        "name": "Regional specialised children's hospital, Olsztyn. Poland ",
+        "name": "Regional specialised children's hospital, Olsztyn. Poland",
         "schemaName": "PL1"
     },
     {
-        "name": "Riga Cleft Lip and Palate Centre, Latvia ",
+        "name": "Riga Cleft Lip and Palate Centre, Latvia",
         "schemaName": "LV1"
     },
     {
-        "name": "Rigshospitalet, Coperhagen University Hospital ",
+        "name": "Rigshospitalet, Copenhagen University Hospital",
         "schemaName": "DK2"
     },
     {
-        "name": "Sahlgrenska University Hospital ",
+        "name": "Sahlgrenska University Hospital",
         "schemaName": "SE2"
     },
     {
@@ -112,7 +112,7 @@
         "schemaName": "IT6"
     },
     {
-        "name": "Smile House - San Paolo Hospital ",
+        "name": "Smile House, San Paolo Hospital",
         "schemaName": "IT7"
     },
     {
@@ -128,7 +128,7 @@
         "schemaName": "DE2"
     },
     {
-        "name": "University Hospital Motol ",
+        "name": "University Hospital Motol",
         "schemaName": "CZ1"
     },
     {
@@ -144,7 +144,7 @@
         "schemaName": "HU2"
     },
     {
-        "name": "Uppsala University Hospital ",
+        "name": "Uppsala University Hospital",
         "schemaName": "SE3"
     },
     {
@@ -156,7 +156,7 @@
         "schemaName": "BE3"
     },
     {
-        "name": "Vall d'Hebron ",
+        "name": "Vall d'Hebron",
         "schemaName": "ES3"
     },
     {
