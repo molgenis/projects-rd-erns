@@ -218,7 +218,8 @@ jq -c '.[]' $organisations_json | while read row; do
     if [ "$create_response"=="SUCCESS" ]
     then
     
-        link_schema_gql=$(new_change_setting_query "CRANIO_PUBLIC_SCHEMA" $primary_schema)
+        primary_schema_name="\"${primary_schema}\""
+        link_schema_gql=$(new_change_setting_query "CRANIO_PUBLIC_SCHEMA" $primary_schema_name)
         link_schema_payload=$(jq -c -n --arg query "$link_schema_gql" '{"query": $query}')
         resp_link_schema=$(curl -s "$emx2_host/$org_id/api/graphql" \
             -H "Content-Type: application/json" \
