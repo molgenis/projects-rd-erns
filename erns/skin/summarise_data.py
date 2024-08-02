@@ -1,120 +1,146 @@
-#///////////////////////////////////////////////////////////////////////////////
-# FILE: summarise_data.py
-# AUTHOR: David Ruvolo
-# CREATED: 2023-06-13
-# MODIFIED: 2023-06-20
-# PURPOSE: summarise data in the registry and prep for dashboard
-# STATUS: stable
-# PACKAGES: NA
-# COMMENTS: NA
-#///////////////////////////////////////////////////////////////////////////////
+"""
+FILE: summarise_data.py
+AUTHOR: David Ruvolo
+CREATED: 2023-06-13
+MODIFIED: 2024-08-02
+PURPOSE: summarise data in the registry and prep for dashboard
+STATUS: stable
+PACKAGES: NA
+COMMENTS: NA
+"""
 
-import molgenis.client as molgenis
-from datatable import dt, f, as_type
-from datetime import datetime
 from os import path
-import pandas as pd
-import numpy as np
 import tempfile
-import pytz
+from datetime import datetime
 import csv
 import re
+import pytz
+import molgenis.client as molgenis
+from datatable import dt, f, as_type
+import pandas as pd
+import numpy as np
 
-def today(tz='Europe/Amsterdam'):
-  return datetime.now(tz=pytz.timezone(tz)).strftime('%Y-%m-%d')
+
+def timestamp(tz='Europe/Amsterdam', fmt='%Y-%m-%d'):
+    """Get the time of the user's timezone and desired format
+
+    :param tz: the timezone to format time to
+    :param tz: str
+
+    :param fmt: time format pattern
+
+    :returns: current datetime based on timezone
+    :rtype: str
+    """
+    return datetime.now(tz=pytz.timezone(tz)).strftime(fmt)
+
+
+def print2(*args):
+    """Print message with timestamp
+    :param *args: one or more strings containing a message to print
+    :type *args: str
+
+    :returns: a message with a timestamp
+    :rtype: str
+    """
+    msg = ' '.join(map(str, args))
+    time = timestamp(fmt='%H:%M:%S.%f')[:-2]
+    print(f"[{time}] {msg}")
+
 
 class Molgenis(molgenis.Session):
-  def __init__(self, *args, **kwargs):
-    super(Molgenis, self).__init__(*args, **kwargs)
-    self.fileImportEndpoint = f"{self._root_url}plugin/importwizard/importFile"
-  
-  def _print(self, *args):
-    """Print
-    Print a message with a timestamp, e.g., "[16:50:12.245] Hello world!".
+    """Molgenis EMX1 Python Client"""
 
-    @param *args one or more strings containing a message to print
-    @return string
-    """
-    message = ' '.join(map(str, args))
-    time = datetime.now(tz=pytz.timezone('Europe/Amsterdam')).strftime('%H:%M:%S.%f')[:-3]
-    print(f'[{time}] {message}')
-  
-  def _datatableToCsv(self, path, datatable):
-    """To CSV
-    Write datatable object as CSV file
+    def __init__(self, *args, **kwargs):
+        super(Molgenis, self).__init__(*args, **kwargs)
+        self.file_api = f"{self._root_url}plugin/importwizard/importFile"
 
-    @param path location to save the file
-    @param data datatable object
-    """
-    data = datatable.to_pandas().replace({np.nan: None})
-    data.to_csv(path, index=False, quoting=csv.QUOTE_ALL)
-  
-  def importDatatableAsCsv(self, pkg_entity: str, data):
-    """Import Datatable As CSV
-    Save a datatable object to as csv file and import into MOLGENIS using the
-    importFile api.
-    
-    @param pkg_entity table identifier in emx format: package_entity
-    @param data a datatable object
-    @param label a description to print (e.g., table name)
-    """
-    with tempfile.TemporaryDirectory() as tmpdir:
-      filepath=f"{tmpdir}/{pkg_entity}.csv"
-      self._datatableToCsv(filepath, data)
-      with open(path.abspath(filepath),'r') as file:
-        response = self._session.post(
-          url = self.fileImportEndpoint,
-          headers = self._headers.token_header,
-          files = {'file': file},
-          params = {'action': 'add_update_existing', 'metadataAction': 'ignore'}
-        )
-        if (response.status_code // 100 ) != 2:
-          self._print('Failed to import data into', pkg_entity, '(', response.status_code, ')')
-        else:
-          self._print('Imported data into', pkg_entity)
-        return response
-      
-def flattenDataset(data, columnPatterns=None):
-  """Flatten Dataset
-  Flatten all nested attributes in a recordset based on a specific column names.
-  
-  @param data a recordset
-  @param column string containing row headers to detect: "subjectID|id|value"
-  @return a new recordset containing flattened data
-  """
-  newData = list(data)
-  for row in newData:
-    if '_href' in row:
-      del row['_href']
-    for column in row.keys():
-      if isinstance(row[column], dict):
-        if bool(row[column]):
-          columnMatch = re.search(columnPatterns, ','.join(row[column].keys()))
-          if bool(columnMatch):
-            row[column] = row[column][columnMatch.group()]
-          else:
-            print(f'Variable {column} is type "dict", but no target column found')
-        else:
-          row[column] = None
-      if isinstance(row[column], list):
-        if bool(row[column]):
-          values = []
-          for nestedrow in row[column]:
-            columnMatch = re.search(columnPatterns, ','.join(nestedrow.keys()))
-            if bool(columnMatch):
-              values.append(nestedrow[columnMatch.group()])
-            else:
-              print(f'Variable {column} is type "list", but no target column found')
-          if bool(values):
-            row[column] = ','.join(values)
-        else:
-          row[column] = None
-  return newData
+    def _dt_to_csv(self, path, datatable):
+        """To CSV
+        Write datatable object as CSV file
 
-#///////////////////////////////////////////////////////////////////////////////
+        @param path location to save the file
+        @param data datatable object
+        """
+        data = datatable.to_pandas().replace({np.nan: None})
+        data.to_csv(path, index=False, quoting=csv.QUOTE_ALL)
+
+    def import_dt(self, pkg_entity: str, data):
+        """Import Datatable As CSV
+        Save a datatable object to as csv file and import into MOLGENIS using the
+        importFile api.
+
+        @param pkg_entity table identifier in emx format: package_entity
+        @param data a datatable object
+        @param label a description to print (e.g., table name)
+        """
+        with tempfile.TemporaryDirectory() as tmpdir:
+            filepath = f"{tmpdir}/{pkg_entity}.csv"
+            self._dt_to_csv(filepath, data)
+            with open(path.abspath(filepath), 'r', encoding='utf-8') as file:
+                response = self._session.post(
+                    url=self.file_api,
+                    headers=self._headers.token_header,
+                    files={'file': file},
+                    params={'action': 'add_update_existing',
+                            'metadataAction': 'ignore'}
+                )
+                if (response.status_code // 100) != 2:
+                    print2('Failed to import data into',
+                           pkg_entity, '(', response.status_code, ')')
+                else:
+                    print2('Imported data into', pkg_entity)
+                return response
+
+
+def flatten_dataset(data, col_patterns=None):
+    """Flatten Dataset
+    Flatten all nested attributes in a recordset based on a specific column names.
+
+    @param data a recordset
+    @param column string containing row headers to detect: "subjectID|id|value"
+    @return a new recordset containing flattened data
+    """
+    new_data = list(data)
+    for row in new_data:
+        if '_href' in row:
+            del row['_href']
+        for column in row.keys():
+            if isinstance(row[column], dict):
+                if bool(row[column]):
+                    col_match = re.search(
+                        col_patterns, ','.join(row[column].keys()))
+                    if bool(col_match):
+                        row[column] = row[column][col_match.group()]
+                    else:
+                        print(
+                            f'Variable {column} is type "dict", but no target column found')
+                else:
+                    row[column] = None
+            if isinstance(row[column], list):
+                if bool(row[column]):
+                    values = []
+                    for nestedrow in row[column]:
+                        col_match = re.search(
+                            col_patterns, ','.join(nestedrow.keys()))
+                        if bool(col_match):
+                            values.append(nestedrow[col_match.group()])
+                        else:
+                            print(
+                                f'Variable {column} is type "list", but no target column found')
+                    if bool(values):
+                        row[column] = ','.join(values)
+                else:
+                    row[column] = None
+    return new_data
+
+# ///////////////////////////////////////////////////////////////////////////////
 
 # ~ 0 ~
 # Connect to database and retrieve data
+
+
+print2('Connecting to database....')
 
 # for local dev
 # from dotenv import load_dotenv
@@ -126,137 +152,168 @@ def flattenDataset(data, columnPatterns=None):
 # for deployment
 ernskin = Molgenis('http://localhost/api/', token='${molgenisToken}')
 
-#///////////////////////////////////////
+# ///////////////////////////////////////
+
+print2('Pulling subject metadata....')
 
 # get metadata
-subjects = ernskin.get('skin_allSubject', batch_size=10000)
-subjectsDT = flattenDataset(data=subjects, columnPatterns='value_en|value|id')
-subjectsDT = dt.Frame(subjectsDT)
+subjects_raw = ernskin.get(
+    'skin_allSubject',
+    attributes='ID_EUPID,dateBirth,biologicalSex,diseaseGroup,centre',
+    batch_size=10000
+)
+
+subject_dt = flatten_dataset(subjects_raw, 'value_en|value|id')
+subject_dt = dt.Frame(subject_dt)
 
 # get stats
 stats = ernskin.get('stats_stats')
-statsDT = dt.Frame(flattenDataset(stats, columnPatterns='name'))
+stats_dt = dt.Frame(flatten_dataset(stats, col_patterns='name'))
 
 # get healthcare providers
-providersDT = dt.Frame(ernskin.get('stats_dataproviders'))
-del providersDT['_href']
+providers_dt = dt.Frame(ernskin.get('stats_dataproviders'))
+del providers_dt['_href']
 
-#///////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////
 
 # ~ 1 ~
-# Summarise data
-
-# ~ 1a ~
 # Summarise data by age
+
+print2('Summarising data by age....')
+
 # For now, use today's date as the default. This should be updated later
-ageDT = subjectsDT[:, {
-  'dateBirth': f.dateBirth,
-  'dateToday': today()
+print2('Isolating date of birth and initialising recent date....')
+age_dt = subject_dt[:, {
+    'dateBirth': as_type(f.dateBirth, dt.Type.date32),
+    'dateToday': as_type(timestamp(), dt.Type.date32)
 }]
 
-
-ageDT[:, dt.update(
-  dateBirth=as_type(f.dateBirth,dt.Type.date32),
-  dateToday=as_type(f.dateToday,dt.Type.date32),
-)]
-
-
-# calculate age
-ageDT['age'] = dt.Frame([
-  round(int((row[1] - row[0]).days) / 364.25, 4) if all(row) else None
-  for row in ageDT[:, (f.dateBirth, f.dateToday)].to_tuples()  
+# calculate age: use .25 and round to 4 digits for specificity
+print2('Calculating age....')
+age_dt['age'] = dt.Frame([
+    round(int((row[1] - row[0]).days) / 364.25, 4) if all(row) else None
+    for row in age_dt[:, (f.dateBirth, f.dateToday)].to_tuples()
 ])
 
-# create bins and summarise data
-agePD = ageDT.to_pandas()
-bins = [0, 0.25, 1, 5,13,18,40, 60,np.inf]
-labels = [
-  'Newborn',
-  'Infant',
-  'Todler',
-  'Kids',
-  'Teenagers',
-  'Adults < 40',
-  'Adults < 60',
-  'Elderly persons',
+# bin data by age category and summarise data
+print2('Binning age by age categories....')
+age_df = age_dt.to_pandas()
+age_bins = [0, 0.25, 1, 5, 13, 18, 40, 60, np.inf]
+age_labels = [
+    'Newborn',
+    'Infant',
+    'Todler',
+    'Kids',
+    'Teenagers',
+    'Adults < 40',
+    'Adults < 60',
+    'Elderly persons',
 ]
 
-agePD['bin'] = pd.cut(agePD['age'],bins=bins,labels=labels,right=False)
+age_df['bin'] = pd.cut(
+    age_df['age'],
+    bins=age_bins,
+    labels=age_labels,
+    right=False
+)
 
 # summarise by bin and update main dataset
-ageDT = dt.Frame(agePD)
-ageByGroup = ageDT[:, dt.count(), dt.by(f.bin)]
+print2('Summarising data by age category and updating stats dataset....')
+age_dt = dt.Frame(age_df)
+age_by_group = age_dt[:, dt.count(), dt.by(f.bin)]
 
-for bin in ageByGroup['bin'].to_list()[0]:
-  statsDT[f.label==bin, 'value'] = ageByGroup[f.bin==bin,'count']
-  
-#///////////////////////////////////////
+for age_bin in age_by_group['bin'].to_list()[0]:
+    stats_dt[
+        f.label == age_bin, 'value'
+    ] = age_by_group[f.bin == age_bin, 'count']
 
-# ~ 1b ~
-# Summarise data by `sexAtBirth`
-# number of patients by `sexAtBirth`
-sexAtBirth = subjectsDT[:, dt.count(), dt.by(f.biologicalSex)]
+# ///////////////////////////////////////////////////////////////////////////////
+
+# ~ 2 ~
+# Summarise data sex at birth
+print2('Summarising data by biological sex....')
+
+# number of patients by `sex_at_birth_dt`
+print2('Counting data by category....')
+sex_at_birth_dt = subject_dt[:, dt.count(), dt.by(f.biologicalSex)]
 
 # calculate percent for each record
-sexAtBirth['total'] = sum(sexAtBirth['count'].to_list()[0])
+print2('Calculating percentages....')
+sex_at_birth_dt['total'] = sum(sex_at_birth_dt['count'].to_list()[0])
 
-sexAtBirth['rate'] = dt.Frame([
-  round(row[0]/row[1], 2) if all(row) else 0
-  for row in sexAtBirth[:, (f.count,f.total)].to_tuples()
+sex_at_birth_dt['rate'] = dt.Frame([
+    round(row[0]/row[1], 2) if all(row) else 0
+    for row in sex_at_birth_dt[:, (f.count, f.total)].to_tuples()
 ])
 
-sexAtBirth['id'] = dt.Frame([
-  f"sex-{value.lower()}"
-  for value in sexAtBirth['biologicalSex'].to_list()[0]
+sex_at_birth_dt['id'] = dt.Frame([
+    f"sex-{value.lower()}"
+    for value in sex_at_birth_dt['biologicalSex'].to_list()[0]
 ])
 
-for id in sexAtBirth['id'].to_list()[0]:
-  statsDT[f.id==id, 'value'] = sexAtBirth[f.id==id,'rate']
+print2('Updating stats dataset....')
+for _id in sex_at_birth_dt['id'].to_list()[0]:
+    stats_dt[f.id == _id, 'value'] = sex_at_birth_dt[f.id == _id, 'rate']
 
-#///////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////
 
-# ~ 1c ~
+# ~ 2 ~
 # Summarise enrollment by disease group
+print2('Summarising data by disease group....')
 
 # get lookup table for disease group
-groups = dt.Frame(ernskin.get('erras_diseasegroup'))[:, {'id': f.id, 'label': f.value}]
-groups.key = 'id'
+print2('Pulling reference dataset for disease groups....')
+diseases_dt = dt.Frame(ernskin.get('erras_diseasegroup'))[
+    :, {'id': f.id, 'label': f.value}]
+diseases_dt.key = 'id'
 
-diseaseGroupDT = subjectsDT[:, dt.count(), dt.by(f.diseaseGroup)][
-  :, {'id': f.diseaseGroup, 'value': f.count}
-][:, :, dt.join(groups)]
 
-diseaseGroupDT['id'] = diseaseGroupDT[:, 'enrollment-' + f.id]
+# summarise groups and merge labels
+print2('Summarising by disease groups and merging labels....')
+disease_groups_dt = subject_dt[:, dt.count(), dt.by(f.diseaseGroup)][
+    :, {'id': f.diseaseGroup, 'value': f.count}
+][:, :, dt.join(diseases_dt)]
 
-for id in diseaseGroupDT['id'].to_list()[0]:
-  statsDT[f.id==id, 'value'] = diseaseGroupDT[f.id==id,'value']
+disease_groups_dt['id'] = disease_groups_dt[:, 'enrollment-' + f.id]
 
-#///////////////////////////////////////
+print2('Updating stats datasets....')
+for _id in disease_groups_dt['id'].to_list()[0]:
+    stats_dt[f.id == _id, 'value'] = disease_groups_dt[f.id == _id, 'value']
 
-# ~ 1d ~
+# ///////////////////////////////////////////////////////////////////////////////
+
+# ~ 3 ~
 # Summarise submitted patients by centers
-centersDT = subjectsDT[:, dt.count(), dt.by(f.centre)]
+print2('Updating centers that have submitted data....')
 
-for id in centersDT['centre'].to_list():
-  providersDT[f.alternativeIdentifier==id, 'hasSubmittedData'] = True
+centers_dt = subject_dt[:, dt.count(), dt.by(f.centre)]
 
-ernskin.importDatatableAsCsv('stats_dataproviders', providersDT)
+for _id in centers_dt['centre'].to_list()[0]:
+    providers_dt[f.alternativeIdentifier == _id, 'hasSubmittedData'] = True
 
-# ~ 1e ~
+# ///////////////////////////////////////////////////////////////////////////////
+
+# ~ 4 ~
 # Prepare summaries for data-highlights component
+print2('Updating data highlights.....')
 
-statsDT[f.label=='Patients', 'value'] = subjectsDT.nrows
+stats_dt[f.label == 'Patients', 'value'] = subject_dt.nrows
 
-statsDT[f.label=='Member countries', 'value'] = dt.unique(
-  providersDT[f.hasSubmittedData,'country']
+stats_dt[f.label == 'Member countries', 'value'] = dt.unique(
+    providers_dt[f.hasSubmittedData, 'country']
 ).nrows
 
-statsDT[f.label=='Healthcare providers', 'value'] = dt.unique(
-  providersDT[f.hasSubmittedData, 'code']
+stats_dt[f.label == 'Healthcare providers', 'value'] = dt.unique(
+    providers_dt[f.hasSubmittedData, 'code']
 ).nrows
 
-#///////////////////////////////////////////////////////////////////////////////
+# ///////////////////////////////////////////////////////////////////////////////
 
 # ~ 2 ~
 # import data into stats_stats
-ernskin.importDatatableAsCsv('stats_stats', statsDT)
+print2('Importing summarised datasets....')
+
+ernskin.import_dt('stats_dataproviders', providers_dt)
+ernskin.import_dt('stats_stats', stats_dt)
+
+ernskin.logout()
