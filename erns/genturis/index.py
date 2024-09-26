@@ -57,20 +57,27 @@ genturis_acc.import_dt('ernstats_stats', stats)
 
 # ~ 2 ~
 # Import files to display on the landing pages
-# import files using the command below. Capture the file id and set file permissions
-# to view in the browser
-# response = genturis_prod.import_file(file='ERN_GENTURIS_User_Manual.pdf')
 
-response = genturis_acc.import_file(file='ERN_GENTURIS_User_Manual.pdf')
-file_id = response.json()['id']
+# import into prod and acc
+prod_response = genturis_prod.import_file(file='ERN_GENTURIS_User_Manual.pdf')
+acc_response = genturis_acc.import_file(file='ERN_GENTURIS_User_Manual.pdf')
 
-# give the role "annonymous" permission to view the file
-command = f"mcmd give anonymous read --package sys_FileMeta --entity {file_id}"
+# build command: give the role "annonymous" permission to view the file
+prod_file_id = prod_response.json()['id']
+acc_file_id = acc_response.json()['id']
 
-system('mcmd config set host')
-system(command)
+prod_cmd = f"mcmd give anonymous read --package sys_FileMeta --entity {prod_file_id}"
+acc_cmd = f"mcmd give anonymous read --package sys_FileMeta --entity {acc_file_id}"
 
-# mcmd config set host
+prod_host = environ['GENTURIS_PROD_HOST'].replace('api', '')
+acc_host = environ['GENTURIS_ACC_HOST'].replace('api', '')
+
+# set host and run command in prod and acc
+system(f'mcmd config set host {prod_host}')
+system(prod_cmd)
+
+system(f'mcmd config set host {acc_host}')
+system(acc_cmd)
 
 
 genturis_prod.logout()
